@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="800.0" style="-fx-background-color: #ffffff; -fx-border-color: #353453; -fx-border-width: 2;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.271" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.P2449100_Rileys_Booking_SystemController">
+   <children>
+      <HBox layoutX="15.0" layoutY="110.0" prefHeight="371.0" prefWidth="774.0" style="-fx-border-color: #353453;" />
+      <HBox layoutX="69.0" layoutY="166.0" prefHeight="255.0" prefWidth="687.0" style="-fx-border-color: #353453;">
+         <children>
+            <TextArea fx:id="UserData" editable="false" prefHeight="259.0" prefWidth="340.0" />
+            <TextArea fx:id="AddressData" editable="false" prefHeight="255.0" prefWidth="346.0" />
+         </children></HBox>
+      <HBox layoutX="176.0" layoutY="26.0" prefHeight="69.0" prefWidth="611.0" style="-fx-border-color: #353453;" />
+      <Button layoutX="772.0" layoutY="1.0" mnemonicParsing="false" onAction="#closeWindow" prefHeight="25.0" prefWidth="24.0" style="-fx-background-color: Transparent; -fx-cursor: hand;">
+         <graphic>
+            <ImageView fitHeight="16.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/close.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button layoutX="732.0" layoutY="-2.0" mnemonicParsing="false" onAction="#minimiseWindow" prefHeight="25.0" prefWidth="24.0" style="-fx-background-color: Transparent; -fx-cursor: hand;">
+         <graphic>
+            <ImageView fitHeight="31.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/minimise.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button layoutX="6.0" layoutY="8.0" mnemonicParsing="false" onAction="#goBack" prefHeight="32.0" prefWidth="35.0" style="-fx-background-color: Transparent; -fx-cursor: hand;">
+         <graphic>
+            <ImageView fitHeight="28.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/back%20arrow.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <ImageView fitHeight="84.0" fitWidth="81.0" layoutX="61.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/RileyLogo.png" />
+         </image>
+      </ImageView>
+      <Text layoutX="318.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 30; -fx-text-alignment: center;" text="My Account" textAlignment="CENTER" wrappingWidth="282.6708984375">
+         <font>
+            <Font size="34.0" />
+         </font>
+      </Text>
+      <Button layoutX="652.0" layoutY="437.0" mnemonicParsing="false" onAction="#UpdatePasswordPage" prefHeight="32.0" prefWidth="105.0" style="-fx-background-color: #353453; -fx-cursor: hand;" text="Edit Password" textFill="WHITE" />
+      <Button layoutX="510.0" layoutY="437.0" mnemonicParsing="false" onAction="#updateProfilePage" prefHeight="32.0" prefWidth="105.0" style="-fx-background-color: #353453; -fx-cursor: hand;" text="Edit details" textFill="WHITE" />
+      <Text layoutX="54.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 23; -fx-text-alignment: center;" text="My Details" textAlignment="CENTER" wrappingWidth="147.6708984375">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Text>
+   </children>
+</AnchorPane>

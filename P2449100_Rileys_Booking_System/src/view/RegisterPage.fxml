@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="800.0" style="-fx-background-color: #ffffff; -fx-border-color: #353453; -fx-border-width: 2;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.P2449100_Rileys_Booking_SystemController">
+   <children>
+      <Text layoutX="315.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 30;" text="Registration" />
+      <ComboBox fx:id="comboTitle" layoutX="178.0" layoutY="135.0" prefHeight="25.0" prefWidth="105.0" promptText="Select Title" style="-fx-border-color: #353453;" visibleRowCount="2" />
+      <TextField fx:id="txtFirstName" layoutX="178.0" layoutY="181.0" prefHeight="25.0" prefWidth="174.0" style="-fx-border-color: #353453;" />
+      <TextField fx:id="txtLastName" layoutX="178.0" layoutY="228.0" prefHeight="25.0" prefWidth="174.0" style="-fx-border-color: #353453;" />
+      <TextField fx:id="txtEmail" layoutX="178.0" layoutY="272.0" prefHeight="25.0" prefWidth="174.0" style="-fx-border-color: #353453;" />
+      <DatePicker fx:id="dateDOB" layoutX="178.0" layoutY="320.0" style="-fx-border-color: #353453;" />
+      <TextField fx:id="txtPhoneNumber" layoutX="178.0" layoutY="364.0" prefHeight="25.0" prefWidth="174.0" style="-fx-border-color: #353453;" />
+      <Text layoutX="49.0" layoutY="154.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 15;" text="Title" />
+      <Text layoutX="49.0" layoutY="199.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 15;" text="First Name" />
+      <Text layoutX="50.0" layoutY="247.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 15;" text="Last Name" />
+      <Text layoutX="50.0" layoutY="290.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 15;" text="Email" />
+      <Text layoutX="50.0" layoutY="339.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 15;" text="Date of Birth" />
+      <Text layoutX="50.0" layoutY="383.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 15;" text="Phone Number" />
+      <Text layoutX="400.0" layoutY="156.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 15;" text="Address" />
+      <TextField fx:id="txtAddress" layoutX="524.0" layoutY="138.0" prefHeight="25.0" prefWidth="174.0" style="-fx-border-color: #353453;" />
+      <Text layoutX="402.0" layoutY="203.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 15;" text="City" />
+      <Text layoutX="402.0" layoutY="250.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 15;" text="PostCode" />
+      <TextField fx:id="txtCity" layoutX="524.0" layoutY="185.0" prefHeight="25.0" prefWidth="174.0" style="-fx-border-color: #353453;" />
+      <TextField fx:id="txtPostCode" layoutX="524.0" layoutY="232.0" prefHeight="25.0" prefWidth="174.0" style="-fx-border-color: #353453;" />
+      <PasswordField fx:id="txtPassword1" layoutX="524.0" layoutY="324.0" prefHeight="25.0" prefWidth="174.0" style="-fx-border-color: #353453;" />
+      <PasswordField fx:id="txtPassword2" layoutX="524.0" layoutY="368.0" prefHeight="25.0" prefWidth="174.0" style="-fx-border-color: #353453;" />
+      <Text layoutX="395.0" layoutY="342.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 15;" text="Password" />
+      <Text layoutX="393.0" layoutY="386.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 15;" text="Confirm Password" />
+      <Label layoutX="474.0" layoutY="278.0" prefHeight="25.0" prefWidth="206.0" text="Choose a password">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <Label layoutX="132.0" layoutY="88.0" prefHeight="32.0" prefWidth="120.0" text="Your details">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <Button layoutX="360.0" layoutY="444.0" mnemonicParsing="false" onAction="#Register" prefHeight="21.0" prefWidth="81.0" style="-fx-background-color: #353453; -fx-cursor: hand;" text="Register" textFill="WHITE" />
+      <Label layoutX="529.0" layoutY="88.0" prefHeight="32.0" prefWidth="82.0" text="Address">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <Button layoutX="772.0" layoutY="1.0" mnemonicParsing="false" onAction="#closeWindow" prefHeight="25.0" prefWidth="24.0" style="-fx-background-color: Transparent; -fx-cursor: hand;">
+         <graphic>
+            <ImageView fitHeight="16.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/close.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button layoutX="732.0" layoutY="-2.0" mnemonicParsing="false" onAction="#minimiseWindow" prefHeight="25.0" prefWidth="24.0" style="-fx-background-color: Transparent; -fx-cursor: hand;">
+         <graphic>
+            <ImageView fitHeight="31.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/minimise.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button layoutX="6.0" layoutY="8.0" mnemonicParsing="false" onAction="#goBackToLogin" prefHeight="32.0" prefWidth="35.0" style="-fx-background-color: Transparent; -fx-cursor: hand;">
+         <graphic>
+            <ImageView fitHeight="28.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/back%20arrow.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+   </children>
+</AnchorPane>
