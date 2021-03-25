@@ -12,10 +12,10 @@ import java.util.Date;
  *
  * @author Yefri
  */
-public class User implements Serializable{
+public class User{
     private int cust_id;
     private String title;
-    private String firstname;
+    private String firstname = "";
     private String lastname;
     private Date birthdate;
     private String email;
@@ -39,6 +39,14 @@ public class User implements Serializable{
 //            is_staff = -1;
     }
     
+//    public User(String title, String firstname){
+//        super();
+////        setTitle(title);
+////        setFirstname(firstname);
+//        this.title = title;
+//        this.firstname = firstname;
+//    }
+    
         public void setCust_ID(int cust_id) {
             this.cust_id = cust_id;
 	}
@@ -52,15 +60,15 @@ public class User implements Serializable{
 	}
         
         public String getTitle() {
-            return title;
+            return this.title;
 	}
 	
-	public void setFirstname(String firstname) {
-            this.firstname = firstname;
+	public void setFirstname(String fname) {
+            this.firstname = fname;
 	}
         
         public String getFirstname() {
-            return firstname;
+            return this.firstname;
 	}
         
 	public void setLastname(String lastname) {

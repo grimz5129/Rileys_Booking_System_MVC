@@ -27,7 +27,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -51,8 +50,6 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     private TextField txtPasswordLogin;
     @FXML
     private Label loginMessageLabel;
-    @FXML
-    private Button btnLogin;
     //Register Page
     @FXML
     private ComboBox<String> comboTitle = new ComboBox<String>();
@@ -119,6 +116,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     
 //    private final User user = new User();
     User user = new User();
+//    User user;
     
     @Override
     public void initialize(URL url, ResourceBundle rb ) {
@@ -126,7 +124,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         comboActivity.setItems(FXCollections.observableArrayList("Snooker","American Pool","Darts","Table Tennis"));
         comboTime.setItems(FXCollections.observableArrayList("Morning","Afternoon","Evening"));
         comboDuration.setItems(FXCollections.observableArrayList("30 Minutes","60 Minutes"));
-        this.user = user;
+        
         
     }
     
@@ -159,6 +157,8 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
                     alertBox();
                     homepage(event);
                     setUser();
+//                    System.out.println("loginPart " + user.toString(user));
+                    loadUserData();
                     break;
                 case 1:
                     loginMessageLabel.setText("");
@@ -459,17 +459,44 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     }
     //profile page
     @FXML
-    private void UpdatePasswordPage(ActionEvent event) {
-        if(null == null){
-            
-        }
+    private void UpdatePasswordPage(ActionEvent event) throws IOException {
+        Parent password_page_parent = FXMLLoader.load(getClass().getResource("/view/updatePasswordPage.fxml"));
+        Scene password_page_scene = new Scene(password_page_parent);
+        Stage app_stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        
+        Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        
+        password_page_parent.setOnMousePressed((MouseEvent event1) -> {
+            xOffset = stage.getX() - event1.getScreenX();
+            yOffset = stage.getY() - event1.getScreenY();
+        });
+        password_page_parent.setOnMouseDragged((MouseEvent event1) -> {
+            stage.setX(event1.getScreenX() + xOffset);
+            stage.setY(event1.getScreenY() + yOffset);
+        });
+        
+        app_stage.setScene(password_page_scene);
+        app_stage.show();
     }
     @FXML
-    private void updateProfilePage(ActionEvent event) {
-        if(null == null){
-            
-        }
-            
+    void goBackProfile(ActionEvent event) throws IOException {
+        Parent password_page_parent = FXMLLoader.load(getClass().getResource("/view/updateProfilePage.fxml"));
+        Scene password_page_scene = new Scene(password_page_parent);
+        Stage app_stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        
+        Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        
+        password_page_parent.setOnMousePressed((MouseEvent event1) -> {
+            xOffset = stage.getX() - event1.getScreenX();
+            yOffset = stage.getY() - event1.getScreenY();
+        });
+        password_page_parent.setOnMouseDragged((MouseEvent event1) -> {
+            stage.setX(event1.getScreenX() + xOffset);
+            stage.setY(event1.getScreenY() + yOffset);
+        });
+        
+        app_stage.setScene(password_page_scene);
+        app_stage.show();
     }
     //staff view page
     @FXML
@@ -478,28 +505,6 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
             
         }
     }
-// Need to remove this, profile page will no longer be used
-//    @FXML
-//    private void goBackProfile(ActionEvent event) throws IOException {
-//        Parent home_page_parent = FXMLLoader.load(getClass().getResource("/profilePage/profilePage.fxml"));
-//        Scene home_page_scene = new Scene(home_page_parent);
-//        Stage app_stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-//        
-//        Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-//        
-//        home_page_parent.setOnMousePressed((MouseEvent event1) -> {
-//            xOffset = stage.getX() - event1.getScreenX();
-//            yOffset = stage.getY() - event1.getScreenY();
-//        });
-//        home_page_parent.setOnMouseDragged((MouseEvent event1) -> {
-//            stage.setX(event1.getScreenX() + xOffset);
-//            stage.setY(event1.getScreenY() + yOffset);
-//        });
-//        
-//        app_stage.setScene(home_page_scene);
-//        app_stage.show();
-//    }
-    //update password
     @FXML
     private void saveChanges(ActionEvent event) {
         if (null == null){
@@ -515,7 +520,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     }
     //update profile page
     @FXML
-    private void Update(ActionEvent event) {
+    private void UpdateUserDetails(ActionEvent event) {
     }
     
     public boolean emailExists(String email) throws SQLException {
@@ -685,21 +690,20 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
      * @throws SQLException 
      */
     public void setUser() throws SQLException{
+//        String fname = "";
         DatabaseConnection connectNow = new DatabaseConnection();
         Connection connectDB = connectNow.getConnection();
         
         String query = "SELECT * FROM users WHERE email = '" + txtEmailLogin.getText() + "'";
-//        String query = "SELECT * FROM users WHERE email = '" + SQLUser + "'";
         
         Statement statement = connectDB.createStatement();
         ResultSet queryResult = statement.executeQuery(query);
         //going to move this to top of class
-//        User user = new User();
-        
         if(queryResult.next()){
         user.setCust_ID(queryResult.getInt(1));
         user.setTitle(queryResult.getString(2));
         user.setFirstname(queryResult.getString(3));
+//        fname = queryResult.getString(3);
         user.setLastname(queryResult.getString(4));
         user.setBirthDate(queryResult.getDate(5));
         user.setEmail(queryResult.getString(6));
@@ -709,7 +713,9 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         user.setPostCode(queryResult.getString(11));
         user.setPrivilege(queryResult.getInt(12));
         }
+//        this.user.setFirstname(fname);
         //this actually sets the the user in the model package.
+//        user.setFirstname("Jeff");
         System.out.println("setUser " + user.toString(user));
     }
 //    @FXML
@@ -717,7 +723,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
 //        DatabaseConnection connectNow = new DatabaseConnection();
 //        Connection connectDB = connectNow.getConnection();
 //        
-//        String query = "SELECT * FROM users WHERE email = '" + SQLUser + "'";
+//        String query = "SELECT * FROM users WHERE email = '" + txtEmailLogin + "'";
 ////        
 //        Statement statement = connectDB.createStatement();
 //        ResultSet queryResult = statement.executeQuery(query);
@@ -726,24 +732,26 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
 ////        updatecomboTitle.setItems(FXCollections.observableArrayList("Mr","Mrs","Miss"));
 ////        updatecomboTitle.getSelectionModel().isSelected(0);
 //        txtUpdateAddress.setText(user.getAddress());
-////        txtUpdateFirstName.setText(queryResult.getString(3));
-////        txtUpdateLastName.setText(queryResult.getString(4));
-////        txtUpdateEmail.setText(queryResult.getString(6));
-//////        dateUpdateDOB.setValue(user.getBirthDate());
-////        txtUpdatePhoneNumber.setText(queryResult.getString(8));
-////        txtUpdateAddress.setText(queryResult.getString(9));
-////        txtUpdateCity.setText(queryResult.getString(10));
+//        txtUpdateFirstName.setText(queryResult.getString(3));
+//        txtUpdateLastName.setText(queryResult.getString(4));
+//        txtUpdateEmail.setText(queryResult.getString(6));
+////        dateUpdateDOB.setValue(user.getBirthDate());
+//        txtUpdatePhoneNumber.setText(queryResult.getString(8));
+//        txtUpdateAddress.setText(queryResult.getString(9));
+//        txtUpdateCity.setText(queryResult.getString(10));
 //        }
 //        
 //    }
     
+    
     @FXML
     public void loadUserData() {
-//        User user = this.user;
+//        User user2 = this.user;
 //        User localUser = user;
 //        txtUpdateAddress.setText(localUser.getAddress());
 //        System.out.print(txtUpdateAddress.getText());
         System.out.println("loadUserData" + user.toString(user));
+//        System.out.println("loadUserData" + user.getFirstname());
     }
     
     

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -11,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="800.0" style="-fx-background-color: #ffffff; -fx-border-color: #353453; -fx-border-width: 2;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.271" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.P2449100_Rileys_Booking_SystemController">
+<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="800.0" style="-fx-background-color: #ffffff; -fx-border-color: #353453; -fx-border-width: 2;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.P2449100_Rileys_Booking_SystemController">
    <children>
       <HBox layoutX="25.0" layoutY="110.0" prefHeight="294.0" prefWidth="764.0" style="-fx-border-color: #353453;">
          <children>
@@ -19,7 +20,19 @@
                <children>
                   <ScrollPane prefHeight="293.0" prefWidth="762.0">
                      <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="292.0" prefWidth="745.0">
+                           <children>
+                              <TableView layoutX="-5.0" layoutY="-1.0" prefHeight="294.0" prefWidth="755.0">
+                                <columns>
+                                  <TableColumn editable="false" prefWidth="128.0" sortable="false" text="Booking ID" />
+                                  <TableColumn editable="false" prefWidth="134.0" sortable="false" text="Activity" />
+                                    <TableColumn editable="false" prefWidth="121.0" sortable="false" text="Date" />
+                                    <TableColumn editable="false" prefWidth="130.0" sortable="false" text="PeriodOfDay" />
+                                    <TableColumn editable="false" prefWidth="125.0" sortable="false" text="Slot Booked" />
+                                    <TableColumn editable="false" prefWidth="123.0" sortable="false" text="Duration" />
+                                </columns>
+                              </TableView>
+                           </children></AnchorPane>
                      </content>
                   </ScrollPane>
                </children>
@@ -31,7 +44,7 @@
          <graphic>
             <ImageView fitHeight="16.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/close.png" />
+                  <Image url="@images/close.png" />
                </image>
             </ImageView>
          </graphic>
@@ -40,7 +53,7 @@
          <graphic>
             <ImageView fitHeight="31.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/minimise.png" />
+                  <Image url="@images/minimise.png" />
                </image>
             </ImageView>
          </graphic>
@@ -49,14 +62,14 @@
          <graphic>
             <ImageView fitHeight="28.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/back%20arrow.png" />
+                  <Image url="@images/back%20arrow.png" />
                </image>
             </ImageView>
          </graphic>
       </Button>
       <ImageView fitHeight="84.0" fitWidth="81.0" layoutX="61.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/RileyLogo.png" />
+            <Image url="@images/RileyLogo.png" />
          </image>
       </ImageView>
       <Text layoutX="299.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 40; -fx-text-alignment: center;" text="Manage Bookings" textAlignment="CENTER" wrappingWidth="359.6708984375">
