@@ -73,7 +73,8 @@
       <Text layoutX="414.0" layoutY="271.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 15;" text="PostCode" />
       <TextField fx:id="txtUpdateCity" layoutX="536.0" layoutY="206.0" prefHeight="25.0" prefWidth="174.0" style="-fx-border-color: #353453;" />
       <TextField fx:id="txtUpdatePostCode" layoutX="536.0" layoutY="253.0" prefHeight="25.0" prefWidth="174.0" style="-fx-border-color: #353453;" />
-      <Button layoutX="626.0" layoutY="384.0" mnemonicParsing="false" onAction="#Update" prefHeight="32.0" prefWidth="84.0" style="-fx-background-color: #353453; -fx-cursor: hand;" text="Save" textFill="WHITE" />
-      <Button layoutX="486.0" layoutY="384.0" mnemonicParsing="false" onAction="#Cancel" prefHeight="32.0" prefWidth="84.0" style="-fx-background-color: #353453; -fx-cursor: hand;" text="Cancel" textFill="WHITE" />
+      <Button layoutX="426.0" layoutY="384.0" mnemonicParsing="false" onAction="#UpdateUserDetails" prefHeight="32.0" prefWidth="84.0" style="-fx-background-color: #353453; -fx-cursor: hand;" text="Save" textFill="WHITE" />
+      <Button layoutX="526.0" layoutY="384.0" mnemonicParsing="false" onAction="#Cancel" prefHeight="32.0" prefWidth="84.0" style="-fx-background-color: #353453; -fx-cursor: hand;" text="Cancel" textFill="WHITE" />
+      <Button layoutX="635.0" layoutY="384.0" mnemonicParsing="false" onAction="#UpdatePasswordPage" prefHeight="32.0" prefWidth="105.0" style="-fx-background-color: #353453; -fx-cursor: hand;" text="Edit Password" textFill="WHITE" />
    </children>
 </AnchorPane>
