@@ -5,7 +5,6 @@
  */
 package model;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -15,7 +14,7 @@ import java.util.Date;
 public class User{
     private int cust_id;
     private String title;
-    private String firstname = "";
+    private String firstname;
     private String lastname;
     private Date birthdate;
     private String email;
@@ -39,111 +38,115 @@ public class User{
 //            is_staff = -1;
     }
     
-//    public User(String title, String firstname){
-//        super();
-////        setTitle(title);
-////        setFirstname(firstname);
-//        this.title = title;
-//        this.firstname = firstname;
-//    }
-    
-        public void setCust_ID(int cust_id) {
-            this.cust_id = cust_id;
-	}
-        
-        public int getCust_ID() {
-            return cust_id;
-	}
-	
-        public void setTitle(String title) {
-            this.title = title;
-	}
-        
-        public String getTitle() {
-            return this.title;
-	}
-	
-	public void setFirstname(String fname) {
-            this.firstname = fname;
-	}
-        
-        public String getFirstname() {
-            return this.firstname;
-	}
-        
-	public void setLastname(String lastname) {
-            this.lastname = lastname;
-	}
-        
-        public String getLastname() {
-            return lastname;
-	}
-	
-        public void setBirthDate(Date birthdate) {
-            this.birthdate = birthdate;
-	}
-        
-	public Date getBirthDate() {
-            return birthdate;
-	}
-	
-	public void setEmail(String email) {
-            this.email = email;
-	}
-	
-        public String getEmail() {
-            return email;
-	}
-	
-	public void setPhoneNumber(String phonenumber) {
-            this.phonenumber = phonenumber;
-	}
-        
-        public String getPhoneNumber() {
-            return phonenumber;
-	}
-	
-	public void setAddress(String address) {
-            this.address = address;
-	}
-        
-        public String getAddress() {
-            return address;
-	}
-	
-	public void setCity(String city) {
-            this.city = city;
-	}
-        
-        public String getCity() {
-            return city;
-	}
-	
-	public void setPostCode(String postcode) {
-            this.postcode = postcode;
-	}
-        
-        public String getPostCode() {
-            return firstname;
-	}
-	
-	public void setPrivilege(int is_staff) {
-            this.is_staff = is_staff;
-	}
-        
-        public int getPrivilege() {
-            return is_staff;
-	}
-	
-//	@Override
-	public String toString(User user) {
-            return "User Details:[Title=" + title + ", FirstName="
-                + firstname + ", LastName=" + lastname + ", BirthDate="
-                + birthdate + ", email=" + email + ", PhoneNumber=" + phonenumber 
-                + ", Address=" + address + ", City=" + city 
-                + ", PostCode=" + postcode + "]";
-	}
-        
+    public void setCust_ID(int cust_id) {
+        this.cust_id = cust_id;
+    }
+
+    public int getCust_ID() {
+        return cust_id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getFirstname() {
+        return this.firstname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setBirthDate(Date birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public Date getBirthDate() {
+        return birthdate;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setPhoneNumber(String phonenumber) {
+        this.phonenumber = phonenumber;
+    }
+
+    public String getPhoneNumber() {
+        return phonenumber;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setPostCode(String postcode) {
+        this.postcode = postcode;
+    }
+
+    public String getPostCode() {
+        return firstname;
+    }
+
+    public void setPrivilege(int is_staff) {
+        this.is_staff = is_staff;
+    }
+
+    public int getPrivilege() {
+        return is_staff;
+    }
+
+//    @Override
+    public String toString(User user) {
+        return "User Details:[CustomerID=" + cust_id + ", Title=" + title + ", FirstName="
+            + firstname + ", LastName=" + lastname + ", BirthDate="
+            + birthdate + ", email=" + email + ", PhoneNumber=" + phonenumber 
+            + ", Address=" + address + ", City=" + city 
+            + ", PostCode=" + postcode + ", Staff=" + is_staff + "]";
+    }
+
+    public User(int cust_id, String firstname, String lastname, Date birthdate, String email, String phonenumber, String address, String city, String postcode, int is_staff) {
+        this.cust_id = cust_id;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.birthdate = birthdate;
+        this.email = email;
+        this.phonenumber = phonenumber;
+        this.address = address;
+        this.city = city;
+        this.postcode = postcode;
+        this.is_staff = is_staff;
+    }
         
 }
 
