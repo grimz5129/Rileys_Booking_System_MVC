@@ -73,11 +73,11 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     private PasswordField txtPassword1;
     @FXML
     private PasswordField txtPassword2;
-    //Update profile page
+    //UpdateProfilePage
     @FXML
-    private ComboBox<String> updatecomboTitle = new ComboBox<String>();
+    private ComboBox<String> updateComboTitle = new ComboBox<String>();
     @FXML
-    private TextField txtUpdateFirstName;
+    private TextField txtUpdateFirstName = new TextField();
     @FXML
     private TextField txtUpdateLastName;
     @FXML
@@ -92,39 +92,33 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     private TextField txtUpdateCity;
     @FXML
     private TextField txtUpdatePostCode;
-    //Update password
-    @FXML
-    private TextField txtCurrentPass;
-    @FXML
-    private TextField txtNewPass;
-    @FXML
-    private TextField txtNewPass2;
     //booking page
     @FXML
     private ComboBox<String> comboActivity = new ComboBox<String>();
-    @FXML
-    private DatePicker bookingDate;
     @FXML
     private ComboBox<String> comboTime = new ComboBox<String>();
     @FXML
     private ComboBox<String> comboDuration = new ComboBox<String>();
     
-//    String SQLUser = "";
-    
     private double xOffset = 0;
     private double yOffset = 0;
     
-//    private final User user = new User();
-    User user = new User();
+//    User user = new User();
 //    User user;
+//    final User user = new User();
+    static final User user;
+    static{ 
+        user = new User();
+    }
     
     @Override
-    public void initialize(URL url, ResourceBundle rb ) {
+    public void initialize(URL url, ResourceBundle rb) {
         comboTitle.setItems(FXCollections.observableArrayList("Mr","Mrs","Miss"));
         comboActivity.setItems(FXCollections.observableArrayList("Snooker","American Pool","Darts","Table Tennis"));
         comboTime.setItems(FXCollections.observableArrayList("Morning","Afternoon","Evening"));
         comboDuration.setItems(FXCollections.observableArrayList("30 Minutes","60 Minutes"));
-        
+        updateComboTitle.setItems(FXCollections.observableArrayList("Mr","Mrs", "Miss"));
+        loadUserData();
         
     }
     
@@ -148,8 +142,6 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         ResultSet queryResult = statement.executeQuery(query);
         
         while(queryResult.next()){
-            //setting the SQLUSER string
-//            SQLUser = txtEmailLogin.getText();
             if (BCrypt.checkpw(txtPasswordLogin.getText(), queryResult.getString(7))){
             switch (queryResult.getInt("is_staff")) {
                 case 0:
@@ -157,8 +149,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
                     alertBox();
                     homepage(event);
                     setUser();
-//                    System.out.println("loginPart " + user.toString(user));
-                    loadUserData();
+//                    loadUserData();
                     break;
                 case 1:
                     loginMessageLabel.setText("");
@@ -195,7 +186,6 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         Stage s = (Stage) ((Node)event.getSource()).getScene().getWindow();
         s.setIconified(true);
     }
-    
     @FXML
     private void loadStaffPage(ActionEvent event) throws IOException {
         Parent staff_page_parent = FXMLLoader.load(getClass().getResource("/view/staffViewPage.fxml"));
@@ -216,7 +206,6 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         app_stage.setScene(staff_page_scene);
         app_stage.show();
     }
-
     @FXML
     private void loadRegisterPage(ActionEvent event) throws IOException {
         Parent register_page_parent = FXMLLoader.load(getClass().getResource("/view/RegisterPage.fxml"));
@@ -238,7 +227,6 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         app_stage.show();
         alertBoxRules();
     }
-
     @FXML
     private void goBackToLogin(ActionEvent event) throws IOException {
         Parent login_page_parent = FXMLLoader.load(getClass().getResource("/view/loginPage.fxml"));
@@ -259,7 +247,6 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         app_stage.setScene(login_page_scene);
         app_stage.show();
     }
-    
     @FXML
     private void loadProfile(ActionEvent event) throws IOException {
         //Made it so that it loads the updateProfilePage over the profilepag egoing to remove that page.
@@ -281,7 +268,6 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         app_stage.setScene(profile_page_scene);
         app_stage.show();
     }
-    
     @FXML
     private void loadMenu(ActionEvent event) throws IOException {
         Parent menu_page_parent = FXMLLoader.load(getClass().getResource("/view/menuPage.fxml"));
@@ -301,7 +287,6 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         stage.show();
         
     }
-    
     @FXML
     private void loadBookings(ActionEvent event) throws IOException {
         Parent profile_page_parent = FXMLLoader.load(getClass().getResource("/view/manageBookingPage.fxml"));
@@ -322,7 +307,6 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         app_stage.setScene(profile_page_scene);
         app_stage.show();
     }
-    
     @FXML
     private void loadBookingSearch(ActionEvent event) throws IOException {
         Parent booking_page_parent = FXMLLoader.load(getClass().getResource("/view/bookingPage.fxml"));
@@ -343,7 +327,6 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         app_stage.setScene(booking_page_scene);
         app_stage.show();
     }
-    
     @FXML
     private void openTwitter(ActionEvent event) {
         try{
@@ -351,7 +334,6 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         } catch (IOException | URISyntaxException e) {
         }
     }
-    
     @FXML
     private void openFacebook(ActionEvent event) {
         try{
@@ -359,7 +341,6 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         } catch (IOException | URISyntaxException e) {
         }
     }
-    
     @FXML
     private void Register(ActionEvent event) throws SQLException, IOException {
         int x = isStringEmpty();
@@ -369,9 +350,6 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         DatabaseConnection connectNow = new DatabaseConnection();
         Connection connectDB = connectNow.getConnection();
         
-//        String title = comboTitle.getSelectionModel().getSelectedItem();
-//        String title = (String) comboTitle.getSelectionModel().getSelectedItem();
-        //im not sure why i cast to string before
         String title = comboTitle.getSelectionModel().getSelectedItem();
         String firstName = txtFirstName.getText();
         String lastName = txtLastName.getText();
@@ -586,7 +564,10 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         alert.setContentText("Please use a different email or login");
         alert.showAndWait();
     }
-    
+    /**
+     * This checks registration form for any empty fields
+     * @return 
+     */
     public int isStringEmpty(){
         int counter = 0;
         
@@ -611,7 +592,11 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         }
         return counter;
     }
-    
+    /**
+     * Only users who are 18+ can register
+     * @param date
+     * @return 
+     */
     public static boolean isOlder(DatePicker date){
         LocalDate currentDate = LocalDate.now();
         LocalDate newDate = LocalDate.of(date.getValue().getYear(), date.getValue().getMonth(), date.getValue().getDayOfMonth());
@@ -622,7 +607,12 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
             return false;
         }
     }
-    
+    /**
+     * This verifies that the passwords match and that the password is over 8 characters long
+     * @param password
+     * @param password2
+     * @return 
+     */
     public static boolean isSecure(String password,String password2) {
         if(password.length() >= 8 && password.equals(password2)){
             return true;
@@ -630,7 +620,9 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
             return false;
         }
     }
-    
+    /**
+     * alertBox for successful login
+     */
     public void alertBox(){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("");
@@ -639,7 +631,9 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
 
         alert.showAndWait();
     }
-    
+    /**
+     * Registration form alertBox informing the user what they must do 
+     */
     public void alertBoxRules(){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("");
@@ -647,7 +641,11 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         alert.setContentText("1. Make sure all information is valid \n2. The password must be 8 characters or more \n3. You must be 18 or older.");
         alert.showAndWait();
     }
-    
+    /**
+     * The homepage method redirects a customer to the homepage after a successful login
+     * @param event
+     * @throws IOException 
+     */
     public void homepage(ActionEvent event) throws IOException{
         Parent homepage_parent = FXMLLoader.load(getClass().getResource("/view/homePage.fxml"));
         Scene homepage_scene = new Scene(homepage_parent);
@@ -690,7 +688,6 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
      * @throws SQLException 
      */
     public void setUser() throws SQLException{
-//        String fname = "";
         DatabaseConnection connectNow = new DatabaseConnection();
         Connection connectDB = connectNow.getConnection();
         
@@ -703,7 +700,6 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         user.setCust_ID(queryResult.getInt(1));
         user.setTitle(queryResult.getString(2));
         user.setFirstname(queryResult.getString(3));
-//        fname = queryResult.getString(3);
         user.setLastname(queryResult.getString(4));
         user.setBirthDate(queryResult.getDate(5));
         user.setEmail(queryResult.getString(6));
@@ -712,46 +708,24 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         user.setCity(queryResult.getString(10));
         user.setPostCode(queryResult.getString(11));
         user.setPrivilege(queryResult.getInt(12));
+        
         }
-//        this.user.setFirstname(fname);
-        //this actually sets the the user in the model package.
-//        user.setFirstname("Jeff");
         System.out.println("setUser " + user.toString(user));
     }
-//    @FXML
-//    public void loadUserData() throws SQLException{
-//        DatabaseConnection connectNow = new DatabaseConnection();
-//        Connection connectDB = connectNow.getConnection();
-//        
-//        String query = "SELECT * FROM users WHERE email = '" + txtEmailLogin + "'";
-////        
-//        Statement statement = connectDB.createStatement();
-//        ResultSet queryResult = statement.executeQuery(query);
-//        
-//        if(queryResult.next()){
-////        updatecomboTitle.setItems(FXCollections.observableArrayList("Mr","Mrs","Miss"));
-////        updatecomboTitle.getSelectionModel().isSelected(0);
-//        txtUpdateAddress.setText(user.getAddress());
-//        txtUpdateFirstName.setText(queryResult.getString(3));
-//        txtUpdateLastName.setText(queryResult.getString(4));
-//        txtUpdateEmail.setText(queryResult.getString(6));
-////        dateUpdateDOB.setValue(user.getBirthDate());
-//        txtUpdatePhoneNumber.setText(queryResult.getString(8));
-//        txtUpdateAddress.setText(queryResult.getString(9));
-//        txtUpdateCity.setText(queryResult.getString(10));
-//        }
-//        
-//    }
     
-    
-    @FXML
-    public void loadUserData() {
-//        User user2 = this.user;
-//        User localUser = user;
-//        txtUpdateAddress.setText(localUser.getAddress());
-//        System.out.print(txtUpdateAddress.getText());
+    public void loadUserData(){
+        //        txtUpdateFirstName = new TextField();
         System.out.println("loadUserData" + user.toString(user));
-//        System.out.println("loadUserData" + user.getFirstname());
+////        txtCurrentPass.setText("Sting");
+////        System.out.println("loaduserdata" + txtCurrentPass.getText());
+//        txtUpdateFirstName.setText(user.getFirstname());
+//        System.out.println("loaduserdata" + txtUpdateFirstName.getText());
+        String fname = user.getFirstname();
+        updateComboTitle.setValue(user.getTitle());
+        txtUpdateFirstName.appendText(fname);
+        System.out.println("loaduserdata" + txtUpdateFirstName.getText());
+            
+        
     }
     
     
