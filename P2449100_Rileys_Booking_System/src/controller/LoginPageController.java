@@ -232,7 +232,8 @@ public class LoginPageController implements Initializable {
         user.setTitle(queryResult.getString(2));
         user.setFirstname(queryResult.getString(3));
         user.setLastname(queryResult.getString(4));
-        user.setBirthDate(queryResult.getDate(5));
+        //added to local data as main controller needed this.
+        user.setBirthDate(queryResult.getDate(5).toLocalDate());
         user.setEmail(queryResult.getString(6));
         user.setPhoneNumber(queryResult.getString(8));
         user.setAddress(queryResult.getString(9));
