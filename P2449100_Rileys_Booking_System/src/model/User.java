@@ -5,7 +5,8 @@
  */
 package model;
 
-import java.util.Date;
+import java.time.LocalDate;
+//import java.util.Date;
 
 /**
  *
@@ -16,7 +17,7 @@ public class User{
     private String title;
     private String firstname;
     private String lastname;
-    private Date birthdate;
+    private LocalDate birthdate;
     private String email;
     private String phonenumber;
     private String address;
@@ -70,11 +71,11 @@ public class User{
         return lastname;
     }
 
-    public void setBirthDate(Date birthdate) {
+    public void setBirthDate(LocalDate birthdate) {
         this.birthdate = birthdate;
     }
 
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthdate;
     }
 
@@ -115,7 +116,7 @@ public class User{
     }
 
     public String getPostCode() {
-        return firstname;
+        return postcode;
     }
 
     public void setPrivilege(int is_staff) {
@@ -135,7 +136,7 @@ public class User{
             + ", PostCode=" + postcode + ", Staff=" + is_staff + "]";
     }
 
-    public User(int cust_id, String firstname, String lastname, Date birthdate, String email, String phonenumber, String address, String city, String postcode, int is_staff) {
+    public User(int cust_id, String firstname, String lastname, LocalDate birthdate, String email, String phonenumber, String address, String city, String postcode, int is_staff) {
         this.cust_id = cust_id;
         this.firstname = firstname;
         this.lastname = lastname;

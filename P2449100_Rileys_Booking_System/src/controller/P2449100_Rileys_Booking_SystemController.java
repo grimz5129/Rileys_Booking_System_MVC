@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 import javafx.collections.FXCollections;
@@ -27,19 +28,22 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.BCrypt;
 import model.DatabaseConnection;
 import model.User;
 
 /**
- *
+ * P2449100 Final Year Project - Riley's Booking System
  * @author Yefri
  */
 public class P2449100_Rileys_Booking_SystemController implements Initializable {
@@ -79,19 +83,19 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     @FXML
     private TextField txtUpdateFirstName = new TextField();
     @FXML
-    private TextField txtUpdateLastName;
+    private TextField txtUpdateLastName = new TextField();
     @FXML
-    private TextField txtUpdateEmail;
+    private TextField txtUpdateEmail = new TextField();
     @FXML
-    private DatePicker dateUpdateDOB;
+    private DatePicker dateUpdateDOB = new DatePicker();
     @FXML
-    private TextField txtUpdatePhoneNumber;
+    private TextField txtUpdatePhoneNumber = new TextField();
     @FXML
-    private TextField txtUpdateAddress;
+    private TextField txtUpdateAddress = new TextField();
     @FXML
-    private TextField txtUpdateCity;
+    private TextField txtUpdateCity = new TextField();
     @FXML
-    private TextField txtUpdatePostCode;
+    private TextField txtUpdatePostCode = new TextField();
     //booking page
     @FXML
     private ComboBox<String> comboActivity = new ComboBox<String>();
@@ -99,13 +103,17 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     private ComboBox<String> comboTime = new ComboBox<String>();
     @FXML
     private ComboBox<String> comboDuration = new ComboBox<String>();
+    //update password page
+    @FXML
+    private TextField txtCurrentPass;
+    @FXML
+    private TextField txtNewPass;
+    @FXML
+    private TextField txtNewPass2;
     
     private double xOffset = 0;
     private double yOffset = 0;
     
-//    User user = new User();
-//    User user;
-//    final User user = new User();
     static final User user;
     static{ 
         user = new User();
@@ -123,7 +131,8 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     }
     
     /**
-     * login is called when the login button is pressed
+     * login connects to the database and verifies if the user is valid.
+     * This method checks if the user is a customer or a member of staff
      * @param event
      * @throws IOException
      * @throws SQLException 
@@ -149,7 +158,6 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
                     alertBox();
                     homepage(event);
                     setUser();
-//                    loadUserData();
                     break;
                 case 1:
                     loginMessageLabel.setText("");
@@ -175,17 +183,28 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
             loginMessageLabel.setText("invalid email or password");
         } 
     }
-    
+    /**
+     * A button event that closes the application
+     * @param event 
+     */
     @FXML
     private void closeWindow(ActionEvent event) {
         System.exit(0);
     }
-
+    /**
+     * A button event that minimises the application to taskbar
+     * @param event 
+     */
     @FXML
     private void minimiseWindow(ActionEvent event) {
         Stage s = (Stage) ((Node)event.getSource()).getScene().getWindow();
         s.setIconified(true);
     }
+    /**
+     * If the user is a member of staff they will be redirected to the staff view page
+     * @param event
+     * @throws IOException 
+     */
     @FXML
     private void loadStaffPage(ActionEvent event) throws IOException {
         Parent staff_page_parent = FXMLLoader.load(getClass().getResource("/view/staffViewPage.fxml"));
@@ -206,6 +225,11 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         app_stage.setScene(staff_page_scene);
         app_stage.show();
     }
+    /**
+     * The user is redirected to the register page.
+     * @param event
+     * @throws IOException 
+     */
     @FXML
     private void loadRegisterPage(ActionEvent event) throws IOException {
         Parent register_page_parent = FXMLLoader.load(getClass().getResource("/view/RegisterPage.fxml"));
@@ -227,15 +251,28 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         app_stage.show();
         alertBoxRules();
     }
+    /**
+     * The user can confirm or cancel logging out of the application.
+     * @param event
+     * @throws IOException 
+     */
     @FXML
     private void goBackToLogin(ActionEvent event) throws IOException {
         Parent login_page_parent = FXMLLoader.load(getClass().getResource("/view/loginPage.fxml"));
         Scene login_page_scene = new Scene(login_page_parent);
         Stage app_stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        
         Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
         
-        login_page_parent.setOnMousePressed((MouseEvent event1) -> {
+        Alert.AlertType type = Alert.AlertType.CONFIRMATION;
+        Alert alert = new Alert(type, "");
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.initOwner(stage);
+        alert.getDialogPane().setContentText("You will now be logged out");
+        alert.getDialogPane().setHeaderText("LOGOUT");
+        
+        Optional<ButtonType> result = alert.showAndWait();
+        if(result.get() == ButtonType.OK) {
+            login_page_parent.setOnMousePressed((MouseEvent event1) -> {
             xOffset = stage.getX() - event1.getScreenX();
             yOffset = stage.getY() - event1.getScreenY();
         });
@@ -246,7 +283,17 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         
         app_stage.setScene(login_page_scene);
         app_stage.show();
+        } else if (result.get() == ButtonType.CANCEL){
+            
+        }
+        
     }
+    /**
+     * On the homepage this will redirect the user to the profile page.
+     * The user will be able to view and change their information.
+     * @param event
+     * @throws IOException 
+     */
     @FXML
     private void loadProfile(ActionEvent event) throws IOException {
         //Made it so that it loads the updateProfilePage over the profilepag egoing to remove that page.
@@ -268,11 +315,17 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         app_stage.setScene(profile_page_scene);
         app_stage.show();
     }
+    /**
+     * This will open a new window with the food and drink menu.
+     * @param event
+     * @throws IOException 
+     */
     @FXML
     private void loadMenu(ActionEvent event) throws IOException {
         Parent menu_page_parent = FXMLLoader.load(getClass().getResource("/view/menuPage.fxml"));
         Scene menu_page_scene = new Scene(menu_page_parent);
         Stage stage = new Stage();
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/view/images/RileyLogo.png")));
         
         menu_page_parent.setOnMousePressed((MouseEvent event1) -> {
             xOffset = stage.getX() - event1.getScreenX();
@@ -287,6 +340,11 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         stage.show();
         
     }
+    /**
+     * This will redirect the user to the page where they can see their bookings.
+     * @param event
+     * @throws IOException 
+     */
     @FXML
     private void loadBookings(ActionEvent event) throws IOException {
         Parent profile_page_parent = FXMLLoader.load(getClass().getResource("/view/manageBookingPage.fxml"));
@@ -307,6 +365,11 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         app_stage.setScene(profile_page_scene);
         app_stage.show();
     }
+    /**
+     * This redirects the user to the page where they can search for available bookings.
+     * @param event
+     * @throws IOException 
+     */
     @FXML
     private void loadBookingSearch(ActionEvent event) throws IOException {
         Parent booking_page_parent = FXMLLoader.load(getClass().getResource("/view/bookingPage.fxml"));
@@ -327,6 +390,10 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         app_stage.setScene(booking_page_scene);
         app_stage.show();
     }
+    /**
+     * This opens a link to the Twitter page on your default browser.
+     * @param event 
+     */
     @FXML
     private void openTwitter(ActionEvent event) {
         try{
@@ -334,6 +401,10 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         } catch (IOException | URISyntaxException e) {
         }
     }
+    /**
+     * This opens a link to the Facebook page on your default browser.
+     * @param event 
+     */
     @FXML
     private void openFacebook(ActionEvent event) {
         try{
@@ -341,6 +412,12 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         } catch (IOException | URISyntaxException e) {
         }
     }
+    /**
+     * When registering a user multiple checks are in place before the user is registered and the data is sent to the database.
+     * @param event
+     * @throws SQLException
+     * @throws IOException 
+     */
     @FXML
     private void Register(ActionEvent event) throws SQLException, IOException {
         int x = isStringEmpty();
@@ -392,7 +469,11 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         
         
     }
-    
+    /**
+     * goBack will redirect the user back to the homepage.
+     * @param event
+     * @throws IOException 
+     */
     @FXML
     private void goBack(ActionEvent event) throws IOException {
         Parent home_page_parent = FXMLLoader.load(getClass().getResource("/view/homePage.fxml"));
@@ -414,6 +495,10 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         app_stage.show();
     }
     //this is Booking Page Controller
+    /**
+     * Books the desired booking.
+     * @param event 
+     */
     @FXML
     private void confirm(ActionEvent event) {
         //do some stuff
@@ -421,6 +506,10 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
             
         }
     }
+    /**
+     * After entering search parameters, the user will be shown available bookings.
+     * @param event 
+     */
     @FXML
     private void search(ActionEvent event) {
         //do some stuff
@@ -429,6 +518,10 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         }
     }
     // manage Booking Page
+    /**
+     * This is to cancel a previously made booking.
+     * @param event 
+     */
     @FXML
     private void cancelBooking(ActionEvent event) {
         if (null == null){
@@ -436,6 +529,11 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         }
     }
     //profile page
+    /**
+     * The user is redirected to the change password page.
+     * @param event
+     * @throws IOException 
+     */
     @FXML
     private void UpdatePasswordPage(ActionEvent event) throws IOException {
         Parent password_page_parent = FXMLLoader.load(getClass().getResource("/view/updatePasswordPage.fxml"));
@@ -456,6 +554,11 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         app_stage.setScene(password_page_scene);
         app_stage.show();
     }
+    /**
+     * This redirects the user from the change password page back to the profile page.
+     * @param event
+     * @throws IOException 
+     */
     @FXML
     void goBackProfile(ActionEvent event) throws IOException {
         Parent password_page_parent = FXMLLoader.load(getClass().getResource("/view/updateProfilePage.fxml"));
@@ -477,30 +580,61 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         app_stage.show();
     }
     //staff view page
+    /**
+     * This allows a member of staff to cancel a booking
+     * @param event 
+     */
     @FXML
     private void cancelBookingStaff(ActionEvent event) {
         if(null == null){
             
         }
     }
+    //update password page
+    /**
+     * This allows the password to be changed.
+     * @param event 
+     */
     @FXML
     private void saveChanges(ActionEvent event) {
         if (null == null){
             
         }
     }
-
+    /**
+     * The cancel button on update password page.
+     * @param event 
+     */
+    @FXML
+    private void Cancel2(ActionEvent event) {
+        if (null == null){
+            
+        }
+    }
+    //update profile page
+    /**
+     * The cancel button on update profile page.
+     * @param event 
+     */
     @FXML
     private void Cancel(ActionEvent event) {
         if (null == null){
             
         }
     }
-    //update profile page
+    /**
+     * This checks if the user has changed any details and updates the database.
+     * @param event 
+     */
     @FXML
     private void UpdateUserDetails(ActionEvent event) {
     }
-    
+    /**
+     * This validates the email during registration to ensure each email entered is linked to only one account.
+     * @param email
+     * @return
+     * @throws SQLException 
+     */
     public boolean emailExists(String email) throws SQLException {
         String query1 = "SELECT email FROM users WHERE email = '" + email + "'";
         DatabaseConnection connectNow = new DatabaseConnection();
@@ -565,7 +699,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         alert.showAndWait();
     }
     /**
-     * This checks registration form for any empty fields
+     * This checks if all text field are empty on registration page.
      * @return 
      */
     public int isStringEmpty(){
@@ -593,7 +727,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         return counter;
     }
     /**
-     * Only users who are 18+ can register
+     * This validates the age and only allows users who are 18+
      * @param date
      * @return 
      */
@@ -701,7 +835,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         user.setTitle(queryResult.getString(2));
         user.setFirstname(queryResult.getString(3));
         user.setLastname(queryResult.getString(4));
-        user.setBirthDate(queryResult.getDate(5));
+        user.setBirthDate(queryResult.getDate(5).toLocalDate());
         user.setEmail(queryResult.getString(6));
         user.setPhoneNumber(queryResult.getString(8));
         user.setAddress(queryResult.getString(9));
@@ -710,21 +844,24 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         user.setPrivilege(queryResult.getInt(12));
         
         }
-        System.out.println("setUser " + user.toString(user));
+//        System.out.println("setUser " + user.toString(user));
     }
-    
+    /**
+     * This loads the user data on the profile page.
+     */
     public void loadUserData(){
-        //        txtUpdateFirstName = new TextField();
-        System.out.println("loadUserData" + user.toString(user));
-////        txtCurrentPass.setText("Sting");
-////        System.out.println("loaduserdata" + txtCurrentPass.getText());
-//        txtUpdateFirstName.setText(user.getFirstname());
-//        System.out.println("loaduserdata" + txtUpdateFirstName.getText());
-        String fname = user.getFirstname();
+//        System.out.println("loadUserData" + user.toString(user));
         updateComboTitle.setValue(user.getTitle());
-        txtUpdateFirstName.appendText(fname);
-        System.out.println("loaduserdata" + txtUpdateFirstName.getText());
-            
+        txtUpdateFirstName.appendText(user.getFirstname());
+        txtUpdateLastName.appendText(user.getLastname());
+        txtUpdateEmail.setText(user.getEmail());
+        dateUpdateDOB.setValue(user.getBirthDate());
+        txtUpdatePhoneNumber.setText(user.getPhoneNumber());
+        txtUpdateAddress.setText(user.getAddress());
+        txtUpdateCity.setText(user.getCity());
+        txtUpdatePostCode.setText(user.getPostCode());
+        
+        
         
     }
     
