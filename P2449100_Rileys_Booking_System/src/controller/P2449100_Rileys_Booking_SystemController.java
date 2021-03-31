@@ -11,6 +11,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -51,7 +52,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     @FXML
     private TextField txtEmailLogin;
     @FXML
-    private TextField txtPasswordLogin;
+    private PasswordField txtPasswordLogin;
     @FXML
     private Label loginMessageLabel;
     //Register Page
@@ -105,11 +106,11 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     private ComboBox<String> comboDuration = new ComboBox<String>();
     //update password page
     @FXML
-    private TextField txtCurrentPass;
+    private PasswordField txtCurrentPass;
     @FXML
-    private TextField txtNewPass;
+    private PasswordField txtNewPass;
     @FXML
-    private TextField txtNewPass2;
+    private PasswordField txtNewPass2;
     
     private double xOffset = 0;
     private double yOffset = 0;
@@ -592,24 +593,51 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     }
     //update password page
     /**
-     * This allows the password to be changed.
-     * @param event 
+     * This updates the users password.
+     * @param event
+     * @throws SQLException 
      */
     @FXML
-    private void saveChanges(ActionEvent event) {
-        if (null == null){
-            
+    private void saveChanges(ActionEvent event) throws SQLException, IOException {
+        DatabaseConnection connectNow = new DatabaseConnection();
+        Connection connectDB = connectNow.getConnection();
+        
+//        String query = "SELECT * FROM users WHERE email = '" + user.getEmail() + "'";
+//        Statement statement = connectDB.createStatement();
+//        ResultSet queryResult = statement.executeQuery(query);
+        String hashedPass2 = BCrypt.hashpw(txtNewPass.getText(), BCrypt.gensalt(12));
+//        int check = 0;
+//        if(queryResult.next()){
+//            if(BCrypt.checkpw(txtCurrentPass.getText(), queryResult.getString(7))){
+//                check++;
+////                queryResult.close();
+//            }
+//        }
+        
+        
+        if(txtNewPass.getText().equals(txtNewPass2.getText())){
+            try {
+                String updateQuery = "Update users set password='"+hashedPass2+"' where email='"+user.getEmail()+"' ";
+                PreparedStatement pst = connectDB.prepareStatement(updateQuery);
+                pst.execute();
+                alertBoxPassChange();
+                pst.close();
+                loadProfile(event);
+            } catch(SQLException e) {
+                System.out.println("Error occured while updating record!");
+            }
+        } else {
+            alertBoxPassError();
         }
+        
     }
     /**
      * The cancel button on update password page.
      * @param event 
      */
     @FXML
-    private void Cancel2(ActionEvent event) {
-        if (null == null){
-            
-        }
+    private void Cancel2(ActionEvent event) throws IOException {
+        loadProfile(event);
     }
     //update profile page
     /**
@@ -617,17 +645,62 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
      * @param event 
      */
     @FXML
-    private void Cancel(ActionEvent event) {
-        if (null == null){
-            
-        }
+    private void Cancel(ActionEvent event) throws IOException {
+        homepage(event);
     }
     /**
      * This checks if the user has changed any details and updates the database.
      * @param event 
      */
     @FXML
-    private void UpdateUserDetails(ActionEvent event) {
+    private void UpdateUserDetails(ActionEvent event) throws IOException {
+        DatabaseConnection connectNow = new DatabaseConnection();
+        Connection connectDB = connectNow.getConnection();
+        
+        String title = updateComboTitle.getSelectionModel().getSelectedItem();
+        String firstName = txtUpdateFirstName.getText();
+        String lastName = txtUpdateLastName.getText();
+        String email = txtUpdateEmail.getText();
+        String birthDate = dateUpdateDOB.getValue().toString();
+        String phoneNumber = txtUpdatePhoneNumber.getText();
+        String address = txtUpdateAddress.getText();
+        String city = txtUpdateCity.getText();
+        String postCode = txtUpdatePostCode.getText();
+        
+        try {
+            
+//                String updateUser = "Update users(title, firstname, lastname, birthdate, email, phonenumber, address, city, postcode) VALUES ('";
+//                String insertValues = title+"','"+firstName+"','"+lastName+"','"+birthDate+"','"+email+"','"+phoneNumber+"','"+address+"','"+city+"','"+postCode+"' where cust_id='"+user.getCust_ID()+"')";
+//                String update = updateUser+insertValues;
+                
+//                String query = "Update users set title='"+title+"' ,firstname='"+firstName+"' ,lastname='"+lastName+"' ,birthdate='"+birthDate+"' ,email'"+email+"' ,phonenumber='"+phoneNumber+"' ,address='"+address+"' ,city'"+city+"' ,postcode='"+postCode+"' where cust_id='"+user.getCust_ID()+"' ";
+                String query = "UPDATE users SET title=?, firstname=?, lastname=?, birthdate=?, email=?, phonenumber=?, address=?, city=?, postcode=? where cust_id="+user.getCust_ID();
+//                String updateQuery = "Update users set title='"+updateComboTitle.getSelectionModel().getSelectedItem()+"' where email='"+user.getEmail()+"' ";
+//                PreparedStatement pst = connectDB.prepareStatement(update);
+                PreparedStatement pst = connectDB.prepareStatement(query);
+                pst.setString(1, title);
+                pst.setString(2, firstName);
+                pst.setString(3, lastName);
+                pst.setString(4, birthDate);
+                pst.setString(5, email);
+                pst.setString(6, phoneNumber);
+                pst.setString(7, address);
+                pst.setString(8, city);
+                pst.setString(9, postCode);
+                
+                
+                pst.execute();
+                alertBoxUserUpdate();
+                setUser();
+                loadProfile(event);
+                pst.close();
+            } catch(SQLException e) {
+                System.out.println("Error occured while updating record!");
+                e.getCause();
+                e.printStackTrace();
+            }
+        
+        
     }
     /**
      * This validates the email during registration to ensure each email entered is linked to only one account.
@@ -649,6 +722,30 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
             exist = false;
         }
         return exist;
+    }
+    
+    public void alertBoxUserUpdate(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("");
+        alert.setHeaderText("Update Successful");
+        alert.setContentText("You have updated your profile");
+        alert.showAndWait();
+    }
+    
+    public void alertBoxPassError(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("");
+        alert.setHeaderText("Password Change Unsuccessful");
+        alert.setContentText("Password does not match");
+        alert.showAndWait();
+    }
+    
+    public void alertBoxPassChange(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("");
+        alert.setHeaderText("Password Change Successful");
+        alert.setContentText("next time log in with new password");
+        alert.showAndWait();
     }
     
     public void alertBoxRegister(){
