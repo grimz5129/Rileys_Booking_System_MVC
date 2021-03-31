@@ -602,20 +602,18 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         DatabaseConnection connectNow = new DatabaseConnection();
         Connection connectDB = connectNow.getConnection();
         
-//        String query = "SELECT * FROM users WHERE email = '" + user.getEmail() + "'";
-//        Statement statement = connectDB.createStatement();
-//        ResultSet queryResult = statement.executeQuery(query);
         String hashedPass2 = BCrypt.hashpw(txtNewPass.getText(), BCrypt.gensalt(12));
-//        int check = 0;
-//        if(queryResult.next()){
-//            if(BCrypt.checkpw(txtCurrentPass.getText(), queryResult.getString(7))){
-//                check++;
-////                queryResult.close();
-//            }
-//        }
         
+        String query = "SELECT * FROM users WHERE email = '" + user.getEmail() + "'";
+        Statement statement = connectDB.createStatement();
+        ResultSet queryResult = statement.executeQuery(query);
         
-        if(txtNewPass.getText().equals(txtNewPass2.getText())){
+        String storedPass = "";
+        while(queryResult.next()){
+            storedPass = queryResult.getString(7);
+        }
+        
+        if(BCrypt.checkpw(txtCurrentPass.getText(), storedPass) == true && txtNewPass.getText().equals(txtNewPass2.getText())){
             try {
                 String updateQuery = "Update users set password='"+hashedPass2+"' where email='"+user.getEmail()+"' ";
                 PreparedStatement pst = connectDB.prepareStatement(updateQuery);
@@ -668,39 +666,25 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         String postCode = txtUpdatePostCode.getText();
         
         try {
-            
-//                String updateUser = "Update users(title, firstname, lastname, birthdate, email, phonenumber, address, city, postcode) VALUES ('";
-//                String insertValues = title+"','"+firstName+"','"+lastName+"','"+birthDate+"','"+email+"','"+phoneNumber+"','"+address+"','"+city+"','"+postCode+"' where cust_id='"+user.getCust_ID()+"')";
-//                String update = updateUser+insertValues;
-                
-//                String query = "Update users set title='"+title+"' ,firstname='"+firstName+"' ,lastname='"+lastName+"' ,birthdate='"+birthDate+"' ,email'"+email+"' ,phonenumber='"+phoneNumber+"' ,address='"+address+"' ,city'"+city+"' ,postcode='"+postCode+"' where cust_id='"+user.getCust_ID()+"' ";
-                String query = "UPDATE users SET title=?, firstname=?, lastname=?, birthdate=?, email=?, phonenumber=?, address=?, city=?, postcode=? where cust_id="+user.getCust_ID();
-//                String updateQuery = "Update users set title='"+updateComboTitle.getSelectionModel().getSelectedItem()+"' where email='"+user.getEmail()+"' ";
-//                PreparedStatement pst = connectDB.prepareStatement(update);
-                PreparedStatement pst = connectDB.prepareStatement(query);
-                pst.setString(1, title);
-                pst.setString(2, firstName);
-                pst.setString(3, lastName);
-                pst.setString(4, birthDate);
-                pst.setString(5, email);
-                pst.setString(6, phoneNumber);
-                pst.setString(7, address);
-                pst.setString(8, city);
-                pst.setString(9, postCode);
-                
-                
-                pst.execute();
-                alertBoxUserUpdate();
-                setUser();
-                loadProfile(event);
-                pst.close();
-            } catch(SQLException e) {
-                System.out.println("Error occured while updating record!");
-                e.getCause();
-                e.printStackTrace();
-            }
-        
-        
+            String query = "UPDATE users SET title=?, firstname=?, lastname=?, birthdate=?, email=?, phonenumber=?, address=?, city=?, postcode=? where cust_id="+user.getCust_ID();
+            PreparedStatement pst = connectDB.prepareStatement(query);
+            pst.setString(1, title);
+            pst.setString(2, firstName);
+            pst.setString(3, lastName);
+            pst.setString(4, birthDate);
+            pst.setString(5, email);
+            pst.setString(6, phoneNumber);
+            pst.setString(7, address);
+            pst.setString(8, city);
+            pst.setString(9, postCode);
+
+            pst.execute();
+            alertBoxUserUpdate();
+            updateUserData();
+            pst.close();
+        } catch(SQLException e) {
+            System.out.println("Error occured while updating record!");
+        } 
     }
     /**
      * This validates the email during registration to ensure each email entered is linked to only one account.
@@ -958,8 +942,20 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         txtUpdateCity.setText(user.getCity());
         txtUpdatePostCode.setText(user.getPostCode());
         
-        
-        
+    }
+    
+    public void updateUserData(){
+        user.setTitle(updateComboTitle.getSelectionModel().getSelectedItem());
+        user.setFirstname(txtUpdateFirstName.getText());
+        user.setLastname(txtUpdateLastName.getText());
+//        user.setBirthDate(queryResult.getDate(5).toLocalDate());
+        user.setBirthDate(dateUpdateDOB.getValue());
+        System.out.println("updateUserData" + dateUpdateDOB.getValue());
+        user.setEmail(txtUpdateEmail.getText());
+        user.setPhoneNumber(txtUpdatePhoneNumber.getText());
+        user.setAddress(txtUpdateAddress.getText());
+        user.setCity(txtUpdateCity.getText());
+        user.setPostCode(txtUpdatePostCode.getText());
     }
     
     
