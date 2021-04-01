@@ -6,7 +6,6 @@
 package model;
 
 import java.time.LocalDate;
-//import java.util.Date;
 
 /**
  *
@@ -26,17 +25,17 @@ public class User{
     private int is_staff;
     
     public User() {
-//            cust_id = -1;
-            title = "";
-            firstname = "";
-            lastname = "";
-            birthdate = null;
-            email = "";
-            phonenumber = "";
-            address = "";
-            city = "";
-            postcode = "";
-//            is_staff = -1;
+        cust_id = -1;
+        title = "";
+        firstname = "";
+        lastname = "";
+        birthdate = null;
+        email = "";
+        phonenumber = "";
+        address = "";
+        city = "";
+        postcode = "";
+        is_staff = -1;
     }
     
     public void setCust_ID(int cust_id) {
