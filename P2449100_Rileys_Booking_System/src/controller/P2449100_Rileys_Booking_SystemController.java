@@ -104,6 +104,8 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     private ComboBox<String> comboTime = new ComboBox<String>();
     @FXML
     private ComboBox<String> comboDuration = new ComboBox<String>();
+    @FXML
+    private DatePicker bookingDate;
     //update password page
     @FXML
     private PasswordField txtCurrentPass;
@@ -513,10 +515,22 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
      */
     @FXML
     private void search(ActionEvent event) {
-        //do some stuff
-        if(null == null){
-            
-        }
+        
+        comboActivity.getSelectionModel().getSelectedItem();
+        bookingDate.getValue();
+        comboTime.getSelectionModel().getSelectedItem();
+        comboDuration.getSelectionModel().getSelectedItem();
+        
+        
+        
+        
+        
+        
+        
+        
+//        if(null == null){
+//            
+//        }
     }
     // manage Booking Page
     /**
@@ -685,6 +699,30 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         } catch(SQLException e) {
             System.out.println("Error occured while updating record!");
         } 
+    }
+    /**
+     * The homepage method redirects a customer to the homepage after a successful login
+     * @param event
+     * @throws IOException 
+     */
+    public void homepage(ActionEvent event) throws IOException{
+        Parent homepage_parent = FXMLLoader.load(getClass().getResource("/view/homePage.fxml"));
+        Scene homepage_scene = new Scene(homepage_parent);
+        Stage app_stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        
+        Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        
+        homepage_parent.setOnMousePressed((MouseEvent event1) -> {
+            xOffset = stage.getX() - event1.getScreenX();
+            yOffset = stage.getY() - event1.getScreenY();
+        });
+        homepage_parent.setOnMouseDragged((MouseEvent event1) -> {
+            stage.setX(event1.getScreenX() + xOffset);
+            stage.setY(event1.getScreenY() + yOffset);
+        });
+        
+        app_stage.setScene(homepage_scene);
+        app_stage.show();
     }
     /**
      * This validates the email during registration to ensure each email entered is linked to only one account.
@@ -857,30 +895,6 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         alert.showAndWait();
     }
     /**
-     * The homepage method redirects a customer to the homepage after a successful login
-     * @param event
-     * @throws IOException 
-     */
-    public void homepage(ActionEvent event) throws IOException{
-        Parent homepage_parent = FXMLLoader.load(getClass().getResource("/view/homePage.fxml"));
-        Scene homepage_scene = new Scene(homepage_parent);
-        Stage app_stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        
-        Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        
-        homepage_parent.setOnMousePressed((MouseEvent event1) -> {
-            xOffset = stage.getX() - event1.getScreenX();
-            yOffset = stage.getY() - event1.getScreenY();
-        });
-        homepage_parent.setOnMouseDragged((MouseEvent event1) -> {
-            stage.setX(event1.getScreenX() + xOffset);
-            stage.setY(event1.getScreenY() + yOffset);
-        });
-        
-        app_stage.setScene(homepage_scene);
-        app_stage.show();
-    }
-    /**
      * This validates the string and checks if it follows the format of a valid email address.
      * @param email
      * @return 
@@ -948,9 +962,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         user.setTitle(updateComboTitle.getSelectionModel().getSelectedItem());
         user.setFirstname(txtUpdateFirstName.getText());
         user.setLastname(txtUpdateLastName.getText());
-//        user.setBirthDate(queryResult.getDate(5).toLocalDate());
         user.setBirthDate(dateUpdateDOB.getValue());
-        System.out.println("updateUserData" + dateUpdateDOB.getValue());
         user.setEmail(txtUpdateEmail.getText());
         user.setPhoneNumber(txtUpdatePhoneNumber.getText());
         user.setAddress(txtUpdateAddress.getText());
