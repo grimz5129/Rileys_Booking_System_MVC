@@ -29,8 +29,10 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -39,6 +41,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import model.BCrypt;
 import model.DatabaseConnection;
 import model.User;
@@ -105,7 +108,9 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     @FXML
     private ComboBox<String> comboDuration = new ComboBox<String>();
     @FXML
-    private DatePicker bookingDate;
+    private DatePicker bookingDate = new DatePicker();
+    @FXML
+    private Button btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9 = new Button();
     //update password page
     @FXML
     private PasswordField txtCurrentPass;
@@ -121,18 +126,33 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     static{ 
         user = new User();
     }
-    
+    /**
+     * Initialize variables when new scene is set, ensures correct values at all times.
+     * @param url
+     * @param rb 
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         comboTitle.setItems(FXCollections.observableArrayList("Mr","Mrs","Miss"));
         comboActivity.setItems(FXCollections.observableArrayList("Snooker","American Pool","Darts","Table Tennis"));
-        comboTime.setItems(FXCollections.observableArrayList("Morning","Afternoon","Evening"));
+        comboTime.setItems(FXCollections.observableArrayList("Afternoon","Evening"));
         comboDuration.setItems(FXCollections.observableArrayList("30 Minutes","60 Minutes"));
         updateComboTitle.setItems(FXCollections.observableArrayList("Mr","Mrs", "Miss"));
         loadUserData();
         
+        bookingDate.setDayCellFactory(picker -> {
+            return new DateCell() {
+                @Override
+                public void updateItem(LocalDate date, boolean empty) {
+                    super.updateItem(date, empty);
+                    LocalDate today = LocalDate.now();
+                    
+                    setDisable(empty || date.compareTo(today) < 0 );
+                }
+            };  });
+        
+        
     }
-    
     /**
      * login connects to the database and verifies if the user is valid.
      * This method checks if the user is a customer or a member of staff
@@ -515,22 +535,61 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
      */
     @FXML
     private void search(ActionEvent event) {
+        String activity = comboActivity.getSelectionModel().getSelectedItem();
+        LocalDate date = bookingDate.getValue();
+        String timeofDay = comboTime.getSelectionModel().getSelectedItem();
+        String duration = comboDuration.getSelectionModel().getSelectedItem();
         
-        comboActivity.getSelectionModel().getSelectedItem();
-        bookingDate.getValue();
-        comboTime.getSelectionModel().getSelectedItem();
-        comboDuration.getSelectionModel().getSelectedItem();
-        
-        
-        
-        
-        
-        
-        
-        
-//        if(null == null){
-//            
+//        System.out.println(activity);
+//        System.out.println(date);
+//        System.out.println(timeofDay);
+//        System.out.println(duration);
+//        if(isBookingSearchEmpty() > 0){
+//            alertBoxSearchBooking();
 //        }
+        if(duration.contains("30") && timeofDay.equals("Afternoon")){
+            btn1.setText("12:00");
+            btn2.setText("12:30");
+            btn3.setText("13:00");
+            btn4.setText("13:30");
+            btn5.setText("14:00");
+            btn6.setText("14:30");
+            btn7.setText("15:00");
+            btn8.setText("15:30");
+            btn9.setText("16:00");
+        } else if(duration.contains("60") && timeofDay.equals("Afternoon")){
+            btn1.setText("12:00-13:00");
+            btn2.setText("12:30-13:30");
+            btn3.setText("13:00-14:00");
+            btn4.setText("13:30-14:30");
+            btn5.setText("14:00-15:00");
+            btn6.setText("14:30-15:30");
+            btn7.setText("15:00-16:00");
+            btn8.setText("15:30-16:30");
+            btn9.setText("");
+        } else if(duration.contains("30") && timeofDay.equals("Evening")){
+            btn1.setText("16:30");
+            btn2.setText("17:00");
+            btn3.setText("17:30");
+            btn4.setText("18:00");
+            btn5.setText("18:30");
+            btn6.setText("19:00");
+            btn7.setText("19:30");
+            btn8.setText("20:00");
+            btn9.setText("20:30");
+        } else if(duration.contains("60") && timeofDay.equals("Evening")){
+            btn1.setText("16:30-17:30");
+            btn2.setText("17:00-18:00");
+            btn3.setText("18:30-19:00");
+            btn4.setText("19:00-20:00");
+            btn5.setText("19:30-20:30");
+            btn6.setText("20:30-21:30");
+            btn7.setText("21:30-22:30");
+            btn8.setText("22:30-23:30");
+            btn9.setText("");
+        }
+        
+        
     }
     // manage Booking Page
     /**
@@ -746,6 +805,14 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         return exist;
     }
     
+    public void alertBoxSearchBooking(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("");
+        alert.setHeaderText("Fields cannot be empty");
+        alert.setContentText("Please try again");
+        alert.showAndWait();
+    }
+    
     public void alertBoxUserUpdate(){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("");
@@ -841,6 +908,24 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         } else if (txtPassword2.getText().isEmpty()) {
             counter++;
         } else if (dateDOB.toString().isEmpty()) {
+            counter++;
+        }
+        return counter;
+    }
+    /**
+     * Counter to check if any of the values to search for a booking are empty
+     * @return 
+     */
+    public int isBookingSearchEmpty(){
+        int counter = 0;
+        
+        if (comboActivity.getSelectionModel().getSelectedItem().isEmpty()) {
+            counter++;
+        } else if (comboDuration.getSelectionModel().getSelectedItem().isEmpty()) {
+            counter++;
+        } else if (comboTime.getSelectionModel().getSelectedItem().isEmpty()) {
+            counter++;
+        } else if (bookingDate.getValue().toString().isEmpty()) {
             counter++;
         }
         return counter;
