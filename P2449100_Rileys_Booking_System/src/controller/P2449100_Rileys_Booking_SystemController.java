@@ -311,6 +311,27 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         }
         
     }
+    @FXML
+    private void goToLogin(ActionEvent event) throws IOException {
+        Parent login_page_parent = FXMLLoader.load(getClass().getResource("/view/loginPage.fxml"));
+        Scene login_page_scene = new Scene(login_page_parent);
+        Stage app_stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        
+        Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        
+        login_page_parent.setOnMousePressed((MouseEvent event1) -> {
+        xOffset = stage.getX() - event1.getScreenX();
+        yOffset = stage.getY() - event1.getScreenY();
+        });
+        login_page_parent.setOnMouseDragged((MouseEvent event1) -> {
+            stage.setX(event1.getScreenX() + xOffset);
+            stage.setY(event1.getScreenY() + yOffset);
+        });
+        
+        app_stage.setScene(login_page_scene);
+        app_stage.show();
+        
+    }
     /**
      * On the homepage this will redirect the user to the profile page.
      * The user will be able to view and change their information.
@@ -540,13 +561,6 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         String timeofDay = comboTime.getSelectionModel().getSelectedItem();
         String duration = comboDuration.getSelectionModel().getSelectedItem();
         
-//        System.out.println(activity);
-//        System.out.println(date);
-//        System.out.println(timeofDay);
-//        System.out.println(duration);
-//        if(isBookingSearchEmpty() > 0){
-//            alertBoxSearchBooking();
-//        }
         if(duration.contains("30") && timeofDay.equals("Afternoon")){
             btn1.setText("12:00");
             btn2.setText("12:30");
@@ -805,14 +819,6 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         return exist;
     }
     
-    public void alertBoxSearchBooking(){
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("");
-        alert.setHeaderText("Fields cannot be empty");
-        alert.setContentText("Please try again");
-        alert.showAndWait();
-    }
-    
     public void alertBoxUserUpdate(){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("");
@@ -908,24 +914,6 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         } else if (txtPassword2.getText().isEmpty()) {
             counter++;
         } else if (dateDOB.toString().isEmpty()) {
-            counter++;
-        }
-        return counter;
-    }
-    /**
-     * Counter to check if any of the values to search for a booking are empty
-     * @return 
-     */
-    public int isBookingSearchEmpty(){
-        int counter = 0;
-        
-        if (comboActivity.getSelectionModel().getSelectedItem().isEmpty()) {
-            counter++;
-        } else if (comboDuration.getSelectionModel().getSelectedItem().isEmpty()) {
-            counter++;
-        } else if (comboTime.getSelectionModel().getSelectedItem().isEmpty()) {
-            counter++;
-        } else if (bookingDate.getValue().toString().isEmpty()) {
             counter++;
         }
         return counter;
