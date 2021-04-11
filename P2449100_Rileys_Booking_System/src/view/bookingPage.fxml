@@ -56,47 +56,47 @@
             <Font size="14.0" />
          </font>
       </Text>
-      <Button layoutX="234.0" layoutY="180.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="138.0" style="-fx-border-color: #353453; -fx-background-color: #ffffff; -fx-cursor: hand;">
+      <Button fx:id="btn1" layoutX="234.0" layoutY="180.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="138.0" style="-fx-border-color: #353453; -fx-background-color: #ffffff; -fx-cursor: hand;">
          <font>
             <Font size="20.0" />
          </font>
       </Button>
-      <Button layoutX="413.0" layoutY="180.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="138.0" style="-fx-border-color: #353453; -fx-background-color: #ffffff; -fx-cursor: hand;">
+      <Button fx:id="btn2" layoutX="413.0" layoutY="180.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="138.0" style="-fx-border-color: #353453; -fx-background-color: #ffffff; -fx-cursor: hand;">
          <font>
             <Font size="20.0" />
          </font>
       </Button>
-      <Button layoutX="592.0" layoutY="180.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="138.0" style="-fx-border-color: #353453; -fx-background-color: #ffffff; -fx-cursor: hand;">
+      <Button fx:id="btn3" layoutX="592.0" layoutY="181.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="138.0" style="-fx-border-color: #353453; -fx-background-color: #ffffff; -fx-cursor: hand;">
          <font>
             <Font size="20.0" />
          </font>
       </Button>
-      <Button layoutX="234.0" layoutY="250.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="138.0" style="-fx-border-color: #353453; -fx-background-color: #ffffff; -fx-cursor: hand;">
+      <Button fx:id="btn4" layoutX="234.0" layoutY="250.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="138.0" style="-fx-border-color: #353453; -fx-background-color: #ffffff; -fx-cursor: hand;">
          <font>
             <Font size="20.0" />
          </font>
       </Button>
-      <Button layoutX="413.0" layoutY="250.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="138.0" style="-fx-border-color: #353453; -fx-background-color: #ffffff; -fx-cursor: hand;">
+      <Button fx:id="btn5" layoutX="413.0" layoutY="250.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="138.0" style="-fx-border-color: #353453; -fx-background-color: #ffffff; -fx-cursor: hand;">
          <font>
             <Font size="20.0" />
          </font>
       </Button>
-      <Button layoutX="592.0" layoutY="250.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="138.0" style="-fx-border-color: #353453; -fx-background-color: #ffffff; -fx-cursor: hand;">
+      <Button fx:id="btn6" layoutX="592.0" layoutY="250.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="138.0" style="-fx-border-color: #353453; -fx-background-color: #ffffff; -fx-cursor: hand;">
          <font>
             <Font size="20.0" />
          </font>
       </Button>
-      <Button layoutX="234.0" layoutY="320.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="138.0" style="-fx-border-color: #353453; -fx-background-color: #ffffff; -fx-cursor: hand;">
+      <Button fx:id="btn7" layoutX="234.0" layoutY="320.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="138.0" style="-fx-border-color: #353453; -fx-background-color: #ffffff; -fx-cursor: hand;">
          <font>
             <Font size="20.0" />
          </font>
       </Button>
-      <Button layoutX="413.0" layoutY="320.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="138.0" style="-fx-border-color: #353453; -fx-background-color: #ffffff; -fx-cursor: hand;">
+      <Button fx:id="btn8" layoutX="413.0" layoutY="320.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="138.0" style="-fx-border-color: #353453; -fx-background-color: #ffffff; -fx-cursor: hand;">
          <font>
             <Font size="20.0" />
          </font>
       </Button>
-      <Button layoutX="592.0" layoutY="320.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="138.0" style="-fx-border-color: #353453; -fx-background-color: #ffffff; -fx-cursor: hand;">
+      <Button fx:id="btn9" layoutX="592.0" layoutY="320.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="138.0" style="-fx-border-color: #353453; -fx-background-color: #ffffff; -fx-cursor: hand;">
          <font>
             <Font size="20.0" />
          </font>
