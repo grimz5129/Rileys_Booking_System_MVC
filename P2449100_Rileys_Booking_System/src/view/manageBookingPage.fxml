@@ -22,14 +22,13 @@
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="292.0" prefWidth="745.0">
                            <children>
-                              <TableView layoutX="-5.0" layoutY="-1.0" prefHeight="294.0" prefWidth="755.0">
+                              <TableView fx:id="bookingTableView" layoutX="-5.0" layoutY="-1.0" prefHeight="294.0" prefWidth="755.0">
                                 <columns>
-                                  <TableColumn editable="false" prefWidth="128.0" sortable="false" text="Booking ID" />
-                                  <TableColumn editable="false" prefWidth="134.0" sortable="false" text="Activity" />
-                                    <TableColumn editable="false" prefWidth="121.0" sortable="false" text="Date" />
-                                    <TableColumn editable="false" prefWidth="130.0" sortable="false" text="PeriodOfDay" />
-                                    <TableColumn editable="false" prefWidth="125.0" sortable="false" text="Slot Booked" />
-                                    <TableColumn editable="false" prefWidth="123.0" sortable="false" text="Duration" />
+                                  <TableColumn fx:id="activityColumn" editable="false" prefWidth="144.0" sortable="false" text="Activity" />
+                                    <TableColumn fx:id="periodofdayColumn" editable="false" prefWidth="172.0" sortable="false" text="PeriodOfDay" />
+                                    <TableColumn fx:id="durationColumn" editable="false" prefWidth="134.0" sortable="false" text="Duration" />
+                                    <TableColumn fx:id="timeColumn" editable="false" prefWidth="152.0" sortable="false" text="Time" />
+                                    <TableColumn fx:id="dateColumn" editable="false" prefWidth="149.0" sortable="false" text="Date" />
                                 </columns>
                               </TableView>
                            </children></AnchorPane>
