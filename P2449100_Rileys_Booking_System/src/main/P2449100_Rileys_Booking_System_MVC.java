@@ -26,36 +26,7 @@ public class P2449100_Rileys_Booking_System_MVC extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        //loads the login page
         Parent root = FXMLLoader.load(getClass().getResource("/view/loginPage.fxml"));
-
-        //staff page
-//        Parent root = FXMLLoader.load(getClass().getResource("/StaffPage/staffPage.fxml"));
-
-        //register Page
-//        Parent root = FXMLLoader.load(getClass().getResource("/registerPage/RegisterPage.fxml"));
-        
-        //booking page
-//        Parent root = FXMLLoader.load(getClass().getResource("/bookingPage/bookingPage.fxml"));
-        
-        //homepage
-//        Parent root = FXMLLoader.load(getClass().getResource("/homePage/homePage.fxml"));
-        
-        //menu
-//        Parent root = FXMLLoader.load(getClass().getResource("/menuPage/menuPage.fxml"));
-        
-        //manageBookingPage
-//        Parent root = FXMLLoader.load(getClass().getResource("/manageBookingPage/manageBookingPage.fxml"));
-        
-        //profilePage
-//        Parent root = FXMLLoader.load(getClass().getResource("/profilePage/profilePage.fxml"));
-        
-        //updateProfilePage
-//        Parent root = FXMLLoader.load(getClass().getResource("/updateProfilePage/updateProfilePage.fxml"));
-        
-        //updatePasswordPage
-//        Parent root = FXMLLoader.load(getClass().getResource("/updatePasswordPage/updatePasswordPage.fxml"));
-        
         
         root.setOnMousePressed((MouseEvent event) -> {
             xOffset = stage.getX() - event.getScreenX();
@@ -72,8 +43,7 @@ public class P2449100_Rileys_Booking_System_MVC extends Application {
         stage.initStyle(StageStyle.UNDECORATED);
         stage.show();
     }
-
-    
+ 
     /**
      * @param args the command line arguments
      */

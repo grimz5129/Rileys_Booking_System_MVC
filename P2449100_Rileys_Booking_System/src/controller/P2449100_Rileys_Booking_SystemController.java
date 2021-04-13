@@ -20,6 +20,8 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,6 +33,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
@@ -126,17 +129,17 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     private PasswordField txtNewPass2;
     //manage Booking Page
     @FXML
-    private TableView<BookingModel> bookingTableView = new TableView<>();
+    private TableView<Booking> bookingTableView = new TableView<>();
     @FXML
-    private TableColumn<BookingModel, String> activityColumn = new TableColumn<>();
+    private TableColumn<Booking, String> activityColumn = new TableColumn<>();
     @FXML
-    private TableColumn<BookingModel, String> dateColumn = new TableColumn<>();
+    private TableColumn<Booking, String> dateColumn = new TableColumn<>();
     @FXML
-    private TableColumn<BookingModel, String> periodofdayColumn = new TableColumn<>();
+    private TableColumn<Booking, String> periodofdayColumn = new TableColumn<>();
     @FXML
-    private TableColumn<BookingModel, String> timeColumn = new TableColumn<>();
+    private TableColumn<Booking, String> timeColumn = new TableColumn<>();
     @FXML
-    private TableColumn<BookingModel, String> durationColumn = new TableColumn<>();
+    private TableColumn<Booking, String> durationColumn = new TableColumn<>();
     
     String bookingTime;
     private double xOffset = 0;
@@ -178,7 +181,11 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
         
-        bookingTableView.setItems(getBookings());
+        try {
+            bookingTableView.setItems(getBookings());
+        } catch (SQLException ex) {
+            Logger.getLogger(P2449100_Rileys_Booking_SystemController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }
     /**
@@ -441,6 +448,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         
         app_stage.setScene(profile_page_scene);
         app_stage.show();
+        
     }
     /**
      * This redirects the user to the page where they can search for available bookings.
@@ -576,7 +584,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
      * @param event 
      */
     @FXML
-    private void confirm(ActionEvent event) throws SQLException, ParseException {
+    private void confirm(ActionEvent event) throws SQLException, ParseException, IOException {
         DatabaseConnection connectNow = new DatabaseConnection();
         Connection connectDB = connectNow.getConnection();
         
@@ -589,23 +597,26 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         
         if(comboDuration.getSelectionModel().getSelectedItem().contains("30")){
             duration = 30;
-        } else if(comboDuration.getSelectionModel().getSelectedItem().contains("30")){
+        } else {
             duration = 60;
         }
-        
         
         String insertFields = "INSERT INTO booking(activity, date, periodofday, duration, time, cust_id) VALUES ('";
         String insertValues = activity+"','"+date+"','"+periodofday+"','"+duration+"','"+time+"','"+cust_id+"')";
         String insertToBooking = insertFields+insertValues;
         
-//        System.out.println("current selected time"+  insertValues);
+        System.out.println("current selected time"+  insertValues);
+        System.out.println("current booking"+  bookingTime);
+        
         if(!bookingTime.isEmpty()){
             try{
                 Statement statement = connectDB.createStatement();
                 statement.execute(insertToBooking);
                 alertBoxBookingComplete();
+                statement.close();
+//                search(event);
+                loadBookings(event);
             } catch (SQLException e){
-                
             }
             
         }
@@ -650,7 +661,6 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         }
         }
         
-         
     }
     /**
      * Booking page button handler
@@ -659,8 +669,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
      */
     @FXML
     private void handleButtonAction(MouseEvent event) {
-        
-        if(event.getSource() == btn1) { 
+        if(event.getSource() == btn1) {
             bookingTime = btn1.getText();
         } else if(event.getSource() == btn2) {
             bookingTime = btn2.getText();
@@ -686,10 +695,42 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
      * @param event 
      */
     @FXML
-    private void cancelBooking(ActionEvent event) {
-        if (null == null){
+    private void cancelBooking(ActionEvent event) throws SQLException {
+        DatabaseConnection connectNow = new DatabaseConnection();
+        Connection connectDB = connectNow.getConnection();
+        
+        int selectedIndex = bookingTableView.getSelectionModel().getSelectedIndex();
+        String activity = activityColumn.getCellData(selectedIndex);
+        String periodofday = periodofdayColumn.getCellData(selectedIndex);
+        String duration = durationColumn.getCellData(selectedIndex);
+        String time = timeColumn.getCellData(selectedIndex);
+        String date = dateColumn.getCellData(selectedIndex);
+        System.out.println("what is being removed " + activity + periodofday + duration + time + date);
+//        String selectedItem = dateColumn.getText();
+        
+        if(selectedIndex >= 0){
+            String query = "DELETE FROM booking WHERE activity = ? AND periodofday = ? AND duration = ? AND time = ? AND date = ? AND cust_id = ?";
             
+            PreparedStatement pst = connectDB.prepareStatement(query);
+            pst.setString(1, activity);
+            pst.setString(2, periodofday);
+            pst.setString(3, duration);
+            pst.setString(4, time);
+            pst.setString(5, date);
+            pst.setInt(6, user.getCust_ID());
+            pst.execute();
+            bookingTableView.getItems().remove(selectedIndex);
+            
+        } else {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("ERROR:");
+            alert.setHeaderText("No selection was made.");
+            alert.setContentText("You have not selected an item to delete. Please try again.");
+            alert.showAndWait();
         }
+        
+        
+        
     }
     //profile page
     /**
@@ -1074,7 +1115,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         return pat.matcher(email).matches(); 
     } 
     /**
-     * Sets the data for the user class
+     * This method sets the data for the user class
      * @throws SQLException 
      */
     public void setUser() throws SQLException{
@@ -1102,7 +1143,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         }
     }
     /**
-     * This loads the user data on the profile page.
+     * This method loads the user data on the profile page.
      */
     public void loadUserData(){
         updateComboTitle.setValue(user.getTitle());
@@ -1116,7 +1157,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         txtUpdatePostCode.setText(user.getPostCode());
     }
     /**
-     * This updates profile Page user data
+     * This method updates the profile Page user data
      */
     public void updateUserData(){
         user.setTitle(updateComboTitle.getSelectionModel().getSelectedItem());
@@ -1129,40 +1170,29 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         user.setCity(txtUpdateCity.getText());
         user.setPostCode(txtUpdatePostCode.getText());
     }
-//    /**
-//     * Getting the booking info from database and setting to booking model.
-//     * @throws SQLException 
-//     */
-//    public void setBookings() throws SQLException{
-//        try{
-//        bookingList.clear();
-//        DatabaseConnection connectNow = new DatabaseConnection();
-//        Connection connectDB = connectNow.getConnection();
-//        
-//        String query = "SELECT * FROM booking WHERE cust_id = '" + user.getCust_ID() + "'";
-//        
-//        Statement statement = connectDB.createStatement();
-//        ResultSet queryResult = statement.executeQuery(query);
-//                    
-//        while (queryResult.next()){
-//                bookingList.add(new BookingModel(queryResult.getString("activity"), queryResult.getString("date"), 
-//                        queryResult.getString("periodofday"), queryResult.getString("duration"), queryResult.getString("time")));
-//                System.out.println("setBookings" + bookingList);
-//            } 
-//        } catch (SQLException e) {
-//        }    
-//         
-//    }
-    
-    public ObservableList<BookingModel> getBookings(){
-        ObservableList<BookingModel> booking = FXCollections.observableArrayList();
+    /**
+     * This method retrieves bookings for a user and stores it in the observeableList
+     * @return
+     * @throws SQLException 
+     */
+    public ObservableList<Booking> getBookings() throws SQLException{
+        DatabaseConnection connectNow = new DatabaseConnection();
+        Connection connectDB = connectNow.getConnection();
+        String query = "SELECT * FROM booking WHERE cust_id = '" + user.getCust_ID() + "'";
         
-        booking.add(new BookingModel("Snooker", "Afternoon", "30", "12:00", "2020-04-12"));
+        Statement statement = connectDB.createStatement();
+        ResultSet queryResult = statement.executeQuery(query);
         
+        ObservableList<Booking> booking = FXCollections.observableArrayList();
+        
+        while (queryResult.next()){
+                booking.add(new Booking(queryResult.getString("activity"), queryResult.getString("periodofday"), 
+                        queryResult.getString("duration"), queryResult.getString("time"), queryResult.getString("date")));
+            } 
         return booking;
-    }
-    
+        }
     
     
 }
+
 
