@@ -11,10 +11,10 @@ import javafx.beans.property.SimpleStringProperty;
  *
  * @author Yefri
  */
-public class Booking {
-     private SimpleStringProperty activity, periodofday, duration, time, date;
+public class BookingModel {
+    private SimpleStringProperty activity, periodofday, duration, time, date;
 
-    public Booking(String activity, String periodofday, String duration, String time, String date) {
+    public BookingModel(String activity, String periodofday, String duration, String time, String date) {
         this.activity = new SimpleStringProperty(activity);
         this.periodofday = new SimpleStringProperty(periodofday);
         this.duration = new SimpleStringProperty(duration);
@@ -61,5 +61,12 @@ public class Booking {
     public void setDate(SimpleStringProperty date) {
         this.date = date;
     }
+
+    
+    
+    
+    
+    
+    
     
 }

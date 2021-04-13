@@ -15,12 +15,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -36,13 +38,17 @@ import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import model.BCrypt;
+import model.Booking;
+import model.BookingModel;
 import model.DatabaseConnection;
 import model.User;
 
@@ -118,7 +124,21 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     private PasswordField txtNewPass;
     @FXML
     private PasswordField txtNewPass2;
+    //manage Booking Page
+    @FXML
+    private TableView<BookingModel> bookingTableView = new TableView<>();
+    @FXML
+    private TableColumn<BookingModel, String> activityColumn = new TableColumn<>();
+    @FXML
+    private TableColumn<BookingModel, String> dateColumn = new TableColumn<>();
+    @FXML
+    private TableColumn<BookingModel, String> periodofdayColumn = new TableColumn<>();
+    @FXML
+    private TableColumn<BookingModel, String> timeColumn = new TableColumn<>();
+    @FXML
+    private TableColumn<BookingModel, String> durationColumn = new TableColumn<>();
     
+    String bookingTime;
     private double xOffset = 0;
     private double yOffset = 0;
     
@@ -126,6 +146,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     static{ 
         user = new User();
     }
+    
     /**
      * Initialize variables when new scene is set, ensures correct values at all times.
      * @param url
@@ -151,6 +172,13 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
                 }
             };  });
         
+        activityColumn.setCellValueFactory(new PropertyValueFactory<>("activity"));
+        periodofdayColumn.setCellValueFactory(new PropertyValueFactory<>("periodofday"));
+        durationColumn.setCellValueFactory(new PropertyValueFactory<>("duration"));
+        timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        
+        bookingTableView.setItems(getBookings());
         
     }
     /**
@@ -311,6 +339,11 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         }
         
     }
+    /**
+     * The back button from register page back to login
+     * @param event
+     * @throws IOException 
+     */
     @FXML
     private void goToLogin(ActionEvent event) throws IOException {
         Parent login_page_parent = FXMLLoader.load(getClass().getResource("/view/loginPage.fxml"));
@@ -493,8 +526,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
             alertBoxRegister();
             goBackToLogin(event);
         } catch (SQLException e) {
-            e.printStackTrace();
-            e.getCause();
+            
         }
         } else {
             if(emailExists(txtEmail.getText())){
@@ -540,15 +572,45 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     }
     //this is Booking Page Controller
     /**
-     * Books the desired booking.
+     * The user selects a time and confirms the booking.
      * @param event 
      */
     @FXML
-    private void confirm(ActionEvent event) {
-        //do some stuff
-        if(null == null){
+    private void confirm(ActionEvent event) throws SQLException, ParseException {
+        DatabaseConnection connectNow = new DatabaseConnection();
+        Connection connectDB = connectNow.getConnection();
+        
+        String activity = comboActivity.getSelectionModel().getSelectedItem();
+        LocalDate date = bookingDate.getValue();
+        String time = bookingTime;
+        String periodofday = comboTime.getSelectionModel().getSelectedItem();
+        int duration = 0;
+        int cust_id = user.getCust_ID();
+        
+        if(comboDuration.getSelectionModel().getSelectedItem().contains("30")){
+            duration = 30;
+        } else if(comboDuration.getSelectionModel().getSelectedItem().contains("30")){
+            duration = 60;
+        }
+        
+        
+        String insertFields = "INSERT INTO booking(activity, date, periodofday, duration, time, cust_id) VALUES ('";
+        String insertValues = activity+"','"+date+"','"+periodofday+"','"+duration+"','"+time+"','"+cust_id+"')";
+        String insertToBooking = insertFields+insertValues;
+        
+//        System.out.println("current selected time"+  insertValues);
+        if(!bookingTime.isEmpty()){
+            try{
+                Statement statement = connectDB.createStatement();
+                statement.execute(insertToBooking);
+                alertBoxBookingComplete();
+            } catch (SQLException e){
+                
+            }
             
         }
+        
+        
     }
     /**
      * After entering search parameters, the user will be shown available bookings.
@@ -556,12 +618,16 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
      */
     @FXML
     private void search(ActionEvent event) {
-        String activity = comboActivity.getSelectionModel().getSelectedItem();
-        LocalDate date = bookingDate.getValue();
-        String timeofDay = comboTime.getSelectionModel().getSelectedItem();
-        String duration = comboDuration.getSelectionModel().getSelectedItem();
+        boolean activity1 = comboActivity.getSelectionModel().getSelectedIndex() < 0;
+        LocalDate date1 = bookingDate.getValue();
+        boolean timeofDay1 = comboTime.getSelectionModel().getSelectedIndex() < 0;
+        boolean duration1 = comboDuration.getSelectionModel().getSelectedIndex() <0;
+        String timeofDay2 = comboTime.getSelectionModel().getSelectedItem();
         
-        if(duration.contains("30") && timeofDay.equals("Afternoon")){
+        if(activity1 || date1 == null || timeofDay1 || duration1){
+            alertBoxBookingSearch();
+        } else if(!activity1 || !date1.isEqual(null) || !timeofDay1 || !duration1){
+            if(timeofDay2.equals("Afternoon")){
             btn1.setText("12:00");
             btn2.setText("12:30");
             btn3.setText("13:00");
@@ -571,17 +637,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
             btn7.setText("15:00");
             btn8.setText("15:30");
             btn9.setText("16:00");
-        } else if(duration.contains("60") && timeofDay.equals("Afternoon")){
-            btn1.setText("12:00-13:00");
-            btn2.setText("12:30-13:30");
-            btn3.setText("13:00-14:00");
-            btn4.setText("13:30-14:30");
-            btn5.setText("14:00-15:00");
-            btn6.setText("14:30-15:30");
-            btn7.setText("15:00-16:00");
-            btn8.setText("15:30-16:30");
-            btn9.setText("");
-        } else if(duration.contains("30") && timeofDay.equals("Evening")){
+        } else if(timeofDay2.equals("Evening")){
             btn1.setText("16:30");
             btn2.setText("17:00");
             btn3.setText("17:30");
@@ -591,19 +647,38 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
             btn7.setText("19:30");
             btn8.setText("20:00");
             btn9.setText("20:30");
-        } else if(duration.contains("60") && timeofDay.equals("Evening")){
-            btn1.setText("16:30-17:30");
-            btn2.setText("17:00-18:00");
-            btn3.setText("18:30-19:00");
-            btn4.setText("19:00-20:00");
-            btn5.setText("19:30-20:30");
-            btn6.setText("20:30-21:30");
-            btn7.setText("21:30-22:30");
-            btn8.setText("22:30-23:30");
-            btn9.setText("");
+        }
         }
         
+         
+    }
+    /**
+     * Booking page button handler
+     * Sets the time in the variable booking
+     * @param event 
+     */
+    @FXML
+    private void handleButtonAction(MouseEvent event) {
         
+        if(event.getSource() == btn1) { 
+            bookingTime = btn1.getText();
+        } else if(event.getSource() == btn2) {
+            bookingTime = btn2.getText();
+        } else if(event.getSource() == btn3) {
+            bookingTime = btn3.getText();
+        } else if(event.getSource() == btn4) {
+            bookingTime = btn4.getText();
+        } else if(event.getSource() == btn5) {
+            bookingTime = btn5.getText();
+        } else if(event.getSource() == btn6) {
+            bookingTime = btn6.getText();
+        } else if(event.getSource() == btn7) {
+            bookingTime = btn7.getText();
+        } else if(event.getSource() == btn8) {
+            bookingTime = btn8.getText();
+        } else if(event.getSource() == btn9) {
+            bookingTime = btn9.getText();
+        }
     }
     // manage Booking Page
     /**
@@ -819,6 +894,22 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         return exist;
     }
     
+    public void alertBoxBookingComplete(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("");
+        alert.setHeaderText("Booking Successful");
+        alert.setContentText("Payment is required in-store");
+        alert.showAndWait();
+    }
+    
+    public void alertBoxBookingSearch(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("");
+        alert.setHeaderText("Search parameters are empty");
+        alert.setContentText("Please try again");
+        alert.showAndWait();
+    }
+    
     public void alertBoxUserUpdate(){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("");
@@ -890,6 +981,24 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         alert.setContentText("Please use a different email or login");
         alert.showAndWait();
     }
+    
+    public void alertBox(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("");
+        alert.setHeaderText("Login Successful");
+        alert.setContentText("Email and Password Match");
+
+        alert.showAndWait();
+    }
+    
+    public void alertBoxRules(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("");
+        alert.setHeaderText("Registration Form");
+        alert.setContentText("1. Make sure all information is valid \n2. The password must be 8 characters or more \n3. You must be 18 or older.");
+        alert.showAndWait();
+    }
+    
     /**
      * This checks if all text field are empty on registration page.
      * @return 
@@ -947,27 +1056,6 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         }
     }
     /**
-     * alertBox for successful login
-     */
-    public void alertBox(){
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("");
-        alert.setHeaderText("Login Successful");
-        alert.setContentText("Email and Password Match");
-
-        alert.showAndWait();
-    }
-    /**
-     * Registration form alertBox informing the user what they must do 
-     */
-    public void alertBoxRules(){
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("");
-        alert.setHeaderText("Registration Form");
-        alert.setContentText("1. Make sure all information is valid \n2. The password must be 8 characters or more \n3. You must be 18 or older.");
-        alert.showAndWait();
-    }
-    /**
      * This validates the string and checks if it follows the format of a valid email address.
      * @param email
      * @return 
@@ -1012,13 +1100,11 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         user.setPrivilege(queryResult.getInt(12));
         
         }
-//        System.out.println("setUser " + user.toString(user));
     }
     /**
      * This loads the user data on the profile page.
      */
     public void loadUserData(){
-//        System.out.println("loadUserData" + user.toString(user));
         updateComboTitle.setValue(user.getTitle());
         txtUpdateFirstName.appendText(user.getFirstname());
         txtUpdateLastName.appendText(user.getLastname());
@@ -1028,9 +1114,10 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         txtUpdateAddress.setText(user.getAddress());
         txtUpdateCity.setText(user.getCity());
         txtUpdatePostCode.setText(user.getPostCode());
-        
     }
-    
+    /**
+     * This updates profile Page user data
+     */
     public void updateUserData(){
         user.setTitle(updateComboTitle.getSelectionModel().getSelectedItem());
         user.setFirstname(txtUpdateFirstName.getText());
@@ -1042,6 +1129,40 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         user.setCity(txtUpdateCity.getText());
         user.setPostCode(txtUpdatePostCode.getText());
     }
+//    /**
+//     * Getting the booking info from database and setting to booking model.
+//     * @throws SQLException 
+//     */
+//    public void setBookings() throws SQLException{
+//        try{
+//        bookingList.clear();
+//        DatabaseConnection connectNow = new DatabaseConnection();
+//        Connection connectDB = connectNow.getConnection();
+//        
+//        String query = "SELECT * FROM booking WHERE cust_id = '" + user.getCust_ID() + "'";
+//        
+//        Statement statement = connectDB.createStatement();
+//        ResultSet queryResult = statement.executeQuery(query);
+//                    
+//        while (queryResult.next()){
+//                bookingList.add(new BookingModel(queryResult.getString("activity"), queryResult.getString("date"), 
+//                        queryResult.getString("periodofday"), queryResult.getString("duration"), queryResult.getString("time")));
+//                System.out.println("setBookings" + bookingList);
+//            } 
+//        } catch (SQLException e) {
+//        }    
+//         
+//    }
+    
+    public ObservableList<BookingModel> getBookings(){
+        ObservableList<BookingModel> booking = FXCollections.observableArrayList();
+        
+        booking.add(new BookingModel("Snooker", "Afternoon", "30", "12:00", "2020-04-12"));
+        
+        return booking;
+    }
+    
     
     
 }
+
