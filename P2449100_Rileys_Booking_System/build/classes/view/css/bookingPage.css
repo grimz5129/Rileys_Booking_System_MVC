@@ -7,13 +7,18 @@ and open the template in the editor.
     Created on : 12-Apr-2021, 10:07:04
     Author     : Yefri
 */
-.button:focused{
+/*.button:focused{
     -fx-background-color:  #353453;
     -fx-text-fill: white;
 }
-.button {
+
+.button:disabled{
+    -fx-background-color:  #ff0000;
+    -fx-text-fill: white;
+}*/
+/*.button {
     -fx-background-color: white;
-}
+}*/
 /*.button:pressed{
     -fx-background-colour: red;
 }*/

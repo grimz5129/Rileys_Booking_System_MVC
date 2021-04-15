@@ -18,6 +18,8 @@ import java.sql.Statement;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -46,12 +48,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.BCrypt;
 import model.Booking;
-import model.BookingModel;
 import model.DatabaseConnection;
 import model.User;
 
@@ -140,6 +143,21 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     private TableColumn<Booking, String> timeColumn = new TableColumn<>();
     @FXML
     private TableColumn<Booking, String> durationColumn = new TableColumn<>();
+    //staffViewPage
+    @FXML
+    private TableView<Booking> staffTableView = new TableView<>();
+    @FXML
+    private TableColumn<Booking, String> staffActivityColumn = new TableColumn<>();
+    @FXML
+    private TableColumn<Booking, String> staffDateColumn = new TableColumn<>();
+    @FXML
+    private TableColumn<Booking, String> staffPeriodofdayColumn = new TableColumn<>();
+    @FXML
+    private TableColumn<Booking, String> staffTimeColumn = new TableColumn<>();
+    @FXML
+    private TableColumn<Booking, String> staffDurationColumn = new TableColumn<>();
+    @FXML
+    private TableColumn<Booking, String> staffCustColumn = new TableColumn<>();
     
     String bookingTime;
     private double xOffset = 0;
@@ -151,7 +169,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     }
     
     /**
-     * Initialize variables when new scene is set, ensures correct values at all times.
+     * Initialize variables, ensures correct values at all times.
      * @param url
      * @param rb 
      */
@@ -181,11 +199,30 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
         
+        staffActivityColumn.setCellValueFactory(new PropertyValueFactory<>("activity"));
+        staffPeriodofdayColumn.setCellValueFactory(new PropertyValueFactory<>("periodofday"));
+        staffDurationColumn.setCellValueFactory(new PropertyValueFactory<>("duration"));
+        staffTimeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
+        staffDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        staffCustColumn.setCellValueFactory(new PropertyValueFactory<>("cust_id"));
+        
         try {
             bookingTableView.setItems(getBookings());
         } catch (SQLException ex) {
             Logger.getLogger(P2449100_Rileys_Booking_SystemController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        try {
+            staffTableView.setItems(getAllBookings());
+        } catch (SQLException ex) {
+            Logger.getLogger(P2449100_Rileys_Booking_SystemController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+//        try {
+//            disableButton();
+//        } catch (SQLException ex) {
+//            Logger.getLogger(P2449100_Rileys_Booking_SystemController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         
     }
     /**
@@ -605,16 +642,12 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         String insertValues = activity+"','"+date+"','"+periodofday+"','"+duration+"','"+time+"','"+cust_id+"')";
         String insertToBooking = insertFields+insertValues;
         
-        System.out.println("current selected time"+  insertValues);
-        System.out.println("current booking"+  bookingTime);
-        
         if(!bookingTime.isEmpty()){
             try{
                 Statement statement = connectDB.createStatement();
                 statement.execute(insertToBooking);
                 alertBoxBookingComplete();
                 statement.close();
-//                search(event);
                 loadBookings(event);
             } catch (SQLException e){
             }
@@ -628,7 +661,9 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
      * @param event 
      */
     @FXML
-    private void search(ActionEvent event) {
+    private void search(ActionEvent event) throws SQLException {
+        reset();
+        disableButton();
         boolean activity1 = comboActivity.getSelectionModel().getSelectedIndex() < 0;
         LocalDate date1 = bookingDate.getValue();
         boolean timeofDay1 = comboTime.getSelectionModel().getSelectedIndex() < 0;
@@ -660,6 +695,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
             btn9.setText("20:30");
         }
         }
+        disableButton();
         
     }
     /**
@@ -705,8 +741,6 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         String duration = durationColumn.getCellData(selectedIndex);
         String time = timeColumn.getCellData(selectedIndex);
         String date = dateColumn.getCellData(selectedIndex);
-        System.out.println("what is being removed " + activity + periodofday + duration + time + date);
-//        String selectedItem = dateColumn.getText();
         
         if(selectedIndex >= 0){
             String query = "DELETE FROM booking WHERE activity = ? AND periodofday = ? AND duration = ? AND time = ? AND date = ? AND cust_id = ?";
@@ -728,9 +762,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
             alert.setContentText("You have not selected an item to delete. Please try again.");
             alert.showAndWait();
         }
-        
-        
-        
+            
     }
     //profile page
     /**
@@ -789,9 +821,37 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
      * @param event 
      */
     @FXML
-    private void cancelBookingStaff(ActionEvent event) {
-        if(null == null){
+    private void cancelBookingStaff(ActionEvent event) throws SQLException {
+        DatabaseConnection connectNow = new DatabaseConnection();
+        Connection connectDB = connectNow.getConnection();
+        
+        int selectedIndex = staffTableView.getSelectionModel().getSelectedIndex();
+        String activity = staffActivityColumn.getCellData(selectedIndex);
+        String periodofday = staffPeriodofdayColumn.getCellData(selectedIndex);
+        String duration = staffDurationColumn.getCellData(selectedIndex);
+        String time = staffTimeColumn.getCellData(selectedIndex);
+        String date = staffDateColumn.getCellData(selectedIndex);
+        String cust_id = staffCustColumn.getCellData(selectedIndex);
+        
+        if(selectedIndex >= 0){
+            String query = "DELETE FROM booking WHERE activity = ? AND periodofday = ? AND duration = ? AND time = ? AND date = ? AND cust_id = ?";
             
+            PreparedStatement pst = connectDB.prepareStatement(query);
+            pst.setString(1, activity);
+            pst.setString(2, periodofday);
+            pst.setString(3, duration);
+            pst.setString(4, time);
+            pst.setString(5, date);
+            pst.setInt(6, Integer.parseInt(cust_id));
+            pst.execute();
+            staffTableView.getItems().remove(selectedIndex);
+            
+        } else {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("ERROR:");
+            alert.setHeaderText("No selection was made.");
+            alert.setContentText("You have not selected an item to delete. Please try again.");
+            alert.showAndWait();
         }
     }
     //update password page
@@ -1036,7 +1096,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("");
         alert.setHeaderText("Registration Form");
-        alert.setContentText("1. Make sure all information is valid \n2. The password must be 8 characters or more \n3. You must be 18 or older.");
+        alert.setContentText("1. Make sure all information is valid \n2. The password must be 8 characters or more \n3. You must be 18 or older");
         alert.showAndWait();
     }
     
@@ -1192,7 +1252,174 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         return booking;
         }
     
+    /**
+     * This method retrieves all bookings for staff View table and stores it in the observeableList
+     * @return
+     * @throws SQLException 
+     */
+    public ObservableList<Booking> getAllBookings() throws SQLException{
+        DatabaseConnection connectNow = new DatabaseConnection();
+        Connection connectDB = connectNow.getConnection();
+        String query = "SELECT * FROM booking";
+        
+        Statement statement = connectDB.createStatement();
+        ResultSet queryResult = statement.executeQuery(query);
+        
+        ObservableList<Booking> bookings = FXCollections.observableArrayList();
+        
+        while (queryResult.next()){
+                bookings.add(new Booking(queryResult.getString("activity"), queryResult.getString("periodofday"), 
+                        queryResult.getString("duration"), queryResult.getString("time"), queryResult.getString("date"), queryResult.getString("cust_id")));
+            } 
+        return bookings;
+        }
     
-}
+    /**
+     * This method will check if a booking already exists
+     * This is a helper method
+     * @param activity
+     * @param date
+     * @param periodofday
+     * @param duration
+     * @param time
+     * @return
+     * @throws SQLException 
+     */
+    public boolean bookingExists(String activity, String date, String periodofday, String duration, String time) throws SQLException {
+        DatabaseConnection connectNow = new DatabaseConnection();
+        Connection connectDB = connectNow.getConnection();
+        
+        PreparedStatement preparedStatement = connectDB.prepareCall("SELECT * FROM booking WHERE activity = ? AND date = ? AND periodofday = ? AND duration = ? AND time = ?");
+        preparedStatement.setString(1, activity);
+        preparedStatement.setString(2, date);
+        preparedStatement.setString(3, periodofday);
+        preparedStatement.setString(4, duration);
+        preparedStatement.setString(5, time);
+        ResultSet rs = preparedStatement.executeQuery();
 
+        Boolean exist = null;
+        
+        if(rs.next() && rs.getString("activity").equals(activity) && rs.getString("date").equals(date) && 
+                rs.getString("periodofday").equals(periodofday) && rs.getString("duration").equals(duration) && rs.getString("date").equals(date)){
+            exist = true;
+        } else {
+            exist = false;
+        }
+        System.out.println("bookingExist" + preparedStatement);
+        System.out.println("bookingExist" + exist);
+        return exist;
+    }
+    
+    /**
+     * This method disables buttons on the booking page
+     * The button is disabled to imitate the time slot being booked.
+     * @throws SQLException 
+     */
+    public void disableButton() throws SQLException{
+        String activity = "";
+        String time = "";
+        String duration = "";
+        String date = "";
+        String periodofday = "";
+        
+        ObservableList<Booking> bookings;
+        bookings = getAllBookings();
+        
+        for(int i = 0; i < bookings.size(); i++){
+            activity = bookings.get(i).getActivity();
+            date = bookings.get(i).getDate();
+            periodofday = bookings.get(i).getPeriodofday();
+            duration = bookings.get(i).getDuration();
+            time = bookings.get(i).getTime();
+            
+//            boolean one = comboActivity.getSelectionModel().getSelectedItem().contains(bookings.get(i).getActivity());
+//            boolean two = bookingDate.getValue().toString().contains(bookings.get(i).getDate());
+//            boolean three = comboTime.getSelectionModel().getSelectedItem().contains(bookings.get(i).getPeriodofday());
+//            boolean four = comboDuration.getSelectionModel().getSelectedItem().contains(bookings.get(i).getDuration());
+//            boolean five = btn1.getText().contains(bookings.get(i).getTime());
+//            
+//            System.out.println("disable button Activity: " + bookings.get(i).getActivity());
+//            System.out.println("disable button Date: " + bookings.get(i).getDate());
+//            System.out.println("disable button Period: " + bookings.get(i).getPeriodofday());
+//            System.out.println("disable button Duration: " + bookings.get(i).getDuration());
+//            System.out.println("disable button Time: " + bookings.get(i).getTime());
+//            
+//            System.out.println("disable button same activity: " + one);
+//            System.out.println("disable button same date: " + two);
+//            System.out.println("disable button same period: " + three);
+//            System.out.println("disable button same duration: " + four);
+//            System.out.println("disable button same button: " + five);
+//            
+            
+            if(bookingExists(activity, date, periodofday, duration, time)){
+                
+                if(true && comboActivity.getSelectionModel().getSelectedItem().contains(bookings.get(i).getActivity()) && bookingDate.getValue().toString().contains(bookings.get(i).getDate()) 
+                        && comboTime.getSelectionModel().getSelectedItem().contains(bookings.get(i).getPeriodofday()) 
+                        && comboDuration.getSelectionModel().getSelectedItem().contains(bookings.get(i).getDuration()) && btn1.getText().equals(time)){
+                    btn1.setDisable(true);
+                } else if(true && comboActivity.getSelectionModel().getSelectedItem().contains(bookings.get(i).getActivity()) && bookingDate.getValue().toString().contains(bookings.get(i).getDate()) 
+                        && comboTime.getSelectionModel().getSelectedItem().contains(bookings.get(i).getPeriodofday()) 
+                        && comboDuration.getSelectionModel().getSelectedItem().contains(bookings.get(i).getDuration()) && btn2.getText().equals(time)){
+                    btn2.setDisable(true);
+                } else if(true && comboActivity.getSelectionModel().getSelectedItem().contains(bookings.get(i).getActivity()) && bookingDate.getValue().toString().contains(bookings.get(i).getDate()) 
+                        && comboTime.getSelectionModel().getSelectedItem().contains(bookings.get(i).getPeriodofday()) 
+                        && comboDuration.getSelectionModel().getSelectedItem().contains(bookings.get(i).getDuration()) && btn3.getText().equals(time)){
+                    btn3.setDisable(true);
+                } else if(true && comboActivity.getSelectionModel().getSelectedItem().contains(bookings.get(i).getActivity()) && bookingDate.getValue().toString().contains(bookings.get(i).getDate()) 
+                        && comboTime.getSelectionModel().getSelectedItem().contains(bookings.get(i).getPeriodofday()) 
+                        && comboDuration.getSelectionModel().getSelectedItem().contains(bookings.get(i).getDuration()) && btn4.getText().equals(time)){
+                    btn4.setDisable(true);
+                } else if(true && comboActivity.getSelectionModel().getSelectedItem().contains(bookings.get(i).getActivity()) && bookingDate.getValue().toString().contains(bookings.get(i).getDate()) 
+                        && comboTime.getSelectionModel().getSelectedItem().contains(bookings.get(i).getPeriodofday()) 
+                        && comboDuration.getSelectionModel().getSelectedItem().contains(bookings.get(i).getDuration()) && btn5.getText().equals(time)){
+                    btn5.setDisable(true);
+                } else if(true && comboActivity.getSelectionModel().getSelectedItem().contains(bookings.get(i).getActivity()) && bookingDate.getValue().toString().contains(bookings.get(i).getDate()) 
+                        && comboTime.getSelectionModel().getSelectedItem().contains(bookings.get(i).getPeriodofday()) 
+                        && comboDuration.getSelectionModel().getSelectedItem().contains(bookings.get(i).getDuration()) && btn6.getText().equals(time)){
+                    btn6.setDisable(true);
+                } else if(true && comboActivity.getSelectionModel().getSelectedItem().contains(bookings.get(i).getActivity()) && bookingDate.getValue().toString().contains(bookings.get(i).getDate()) 
+                        && comboTime.getSelectionModel().getSelectedItem().contains(bookings.get(i).getPeriodofday()) 
+                        && comboDuration.getSelectionModel().getSelectedItem().contains(bookings.get(i).getDuration()) && btn7.getText().equals(time)){
+                    btn7.setDisable(true);
+                } else if(true && comboActivity.getSelectionModel().getSelectedItem().contains(bookings.get(i).getActivity()) && bookingDate.getValue().toString().contains(bookings.get(i).getDate()) 
+                        && comboTime.getSelectionModel().getSelectedItem().contains(bookings.get(i).getPeriodofday()) 
+                        && comboDuration.getSelectionModel().getSelectedItem().contains(bookings.get(i).getDuration()) && btn8.getText().equals(time)){
+                    btn8.setDisable(true);
+                } else if(true && comboActivity.getSelectionModel().getSelectedItem().contains(bookings.get(i).getActivity()) && bookingDate.getValue().toString().contains(bookings.get(i).getDate()) 
+                        && comboTime.getSelectionModel().getSelectedItem().contains(bookings.get(i).getPeriodofday()) 
+                        && comboDuration.getSelectionModel().getSelectedItem().contains(bookings.get(i).getDuration()) && btn9.getText().equals(time)){
+                    btn9.setDisable(true);
+                }
+                
+                
+                //end of bookingexist
+            }
+            
+            
+            //end of for loop
+        }
+        
+        //end of method
+    }
+    
+    /**
+     * This method enables all buttons on booking page
+     */
+    public void reset(){
+        btn1.setDisable(false);
+        btn2.setDisable(false);
+        btn3.setDisable(false);
+        btn4.setDisable(false);
+        btn5.setDisable(false);
+        btn6.setDisable(false);
+        btn7.setDisable(false);
+        btn8.setDisable(false);
+        btn9.setDisable(false);
+    }
+    
+        
+        
+        
+}
+    
 
