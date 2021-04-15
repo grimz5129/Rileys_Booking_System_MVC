@@ -18,8 +18,6 @@ import java.sql.Statement;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -48,9 +46,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.BCrypt;
@@ -60,6 +56,8 @@ import model.User;
 
 /**
  * P2449100 Final Year Project - Riley's Booking System
+ * This is my booking system that has been written in Java with the use of JavaFXML
+ * Tools: Netbeans IDE 12.0, XAMPP, Github, SceneBuilder.
  * @author Yefri
  */
 public class P2449100_Rileys_Booking_SystemController implements Initializable {
@@ -169,7 +167,8 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     }
     
     /**
-     * Initialize variables, ensures correct values at all times.
+     * This is where methods and data are being called/set.
+     * Adds all data when a new scene is initialized
      * @param url
      * @param rb 
      */
@@ -218,13 +217,8 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
             Logger.getLogger(P2449100_Rileys_Booking_SystemController.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-//        try {
-//            disableButton();
-//        } catch (SQLException ex) {
-//            Logger.getLogger(P2449100_Rileys_Booking_SystemController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-        
     }
+    
     /**
      * login connects to the database and verifies if the user is valid.
      * This method checks if the user is a customer or a member of staff
@@ -278,6 +272,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
             loginMessageLabel.setText("invalid email or password");
         } 
     }
+    
     /**
      * A button event that closes the application
      * @param event 
@@ -286,6 +281,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     private void closeWindow(ActionEvent event) {
         System.exit(0);
     }
+    
     /**
      * A button event that minimises the application to taskbar
      * @param event 
@@ -295,6 +291,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         Stage s = (Stage) ((Node)event.getSource()).getScene().getWindow();
         s.setIconified(true);
     }
+    
     /**
      * If the user is a member of staff they will be redirected to the staff view page
      * @param event
@@ -320,6 +317,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         app_stage.setScene(staff_page_scene);
         app_stage.show();
     }
+    
     /**
      * The user is redirected to the register page.
      * @param event
@@ -346,6 +344,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         app_stage.show();
         alertBoxRules();
     }
+    
     /**
      * The user can confirm or cancel logging out of the application.
      * @param event
@@ -383,6 +382,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         }
         
     }
+    
     /**
      * The back button from register page back to login
      * @param event
@@ -409,6 +409,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         app_stage.show();
         
     }
+    
     /**
      * On the homepage this will redirect the user to the profile page.
      * The user will be able to view and change their information.
@@ -436,6 +437,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         app_stage.setScene(profile_page_scene);
         app_stage.show();
     }
+    
     /**
      * This will open a new window with the food and drink menu.
      * @param event
@@ -461,6 +463,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         stage.show();
         
     }
+    
     /**
      * This will redirect the user to the page where they can see their bookings.
      * @param event
@@ -487,6 +490,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         app_stage.show();
         
     }
+    
     /**
      * This redirects the user to the page where they can search for available bookings.
      * @param event
@@ -512,6 +516,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         app_stage.setScene(booking_page_scene);
         app_stage.show();
     }
+    
     /**
      * This opens a link to the Twitter page on your default browser.
      * @param event 
@@ -523,6 +528,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         } catch (IOException | URISyntaxException e) {
         }
     }
+    
     /**
      * This opens a link to the Facebook page on your default browser.
      * @param event 
@@ -534,6 +540,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         } catch (IOException | URISyntaxException e) {
         }
     }
+    
     /**
      * When registering a user multiple checks are in place before the user is registered and the data is sent to the database.
      * @param event
@@ -588,8 +595,8 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
             }
         }
         
-        
     }
+    
     /**
      * goBack will redirect the user back to the homepage.
      * @param event
@@ -615,6 +622,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         app_stage.setScene(home_page_scene);
         app_stage.show();
     }
+    
     //this is Booking Page Controller
     /**
      * The user selects a time and confirms the booking.
@@ -650,12 +658,11 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
                 statement.close();
                 loadBookings(event);
             } catch (SQLException e){
-            }
-            
+            } 
         }
         
-        
     }
+    
     /**
      * After entering search parameters, the user will be shown available bookings.
      * @param event 
@@ -698,6 +705,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         disableButton();
         
     }
+    
     /**
      * Booking page button handler
      * Sets the time in the variable booking
@@ -725,6 +733,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
             bookingTime = btn9.getText();
         }
     }
+    
     // manage Booking Page
     /**
      * This is to cancel a previously made booking.
@@ -764,6 +773,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         }
             
     }
+    
     //profile page
     /**
      * The user is redirected to the change password page.
@@ -790,6 +800,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         app_stage.setScene(password_page_scene);
         app_stage.show();
     }
+    
     /**
      * This redirects the user from the change password page back to the profile page.
      * @param event
@@ -815,6 +826,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         app_stage.setScene(password_page_scene);
         app_stage.show();
     }
+    
     //staff view page
     /**
      * This allows a member of staff to cancel a booking
@@ -854,6 +866,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
             alert.showAndWait();
         }
     }
+    
     //update password page
     /**
      * This updates the users password.
@@ -892,6 +905,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         }
         
     }
+    
     /**
      * The cancel button on update password page.
      * @param event 
@@ -900,6 +914,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     private void Cancel2(ActionEvent event) throws IOException {
         loadProfile(event);
     }
+    
     //update profile page
     /**
      * The cancel button on update profile page.
@@ -909,6 +924,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     private void Cancel(ActionEvent event) throws IOException {
         homepage(event);
     }
+    
     /**
      * This checks if the user has changed any details and updates the database.
      * @param event 
@@ -949,6 +965,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
             System.out.println("Error occured while updating record!");
         } 
     }
+    
     /**
      * The homepage method redirects a customer to the homepage after a successful login
      * @param event
@@ -973,6 +990,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         app_stage.setScene(homepage_scene);
         app_stage.show();
     }
+    
     /**
      * This validates the email during registration to ensure each email entered is linked to only one account.
      * @param email
@@ -1101,7 +1119,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     }
     
     /**
-     * This checks if all text field are empty on registration page.
+     * This method checks if all text field are empty on registration page.
      * @return 
      */
     public int isStringEmpty(){
@@ -1128,8 +1146,9 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         }
         return counter;
     }
+    
     /**
-     * This validates the age and only allows users who are 18+
+     * This method validates the age and only allows users who are 18+
      * @param date
      * @return 
      */
@@ -1143,8 +1162,9 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
             return false;
         }
     }
+    
     /**
-     * This verifies that the passwords match and that the password is over 8 characters long
+     * This method verifies that the passwords match and that the password is over 8 characters long
      * @param password
      * @param password2
      * @return 
@@ -1156,8 +1176,9 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
             return false;
         }
     }
+    
     /**
-     * This validates the string and checks if it follows the format of a valid email address.
+     * This method validates the string and checks if it follows the format of a valid email address.
      * @param email
      * @return 
      */
@@ -1173,7 +1194,8 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
             return false;
         } 
         return pat.matcher(email).matches(); 
-    } 
+    }
+    
     /**
      * This method sets the data for the user class
      * @throws SQLException 
@@ -1202,6 +1224,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         
         }
     }
+    
     /**
      * This method loads the user data on the profile page.
      */
@@ -1216,6 +1239,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         txtUpdateCity.setText(user.getCity());
         txtUpdatePostCode.setText(user.getPostCode());
     }
+    
     /**
      * This method updates the profile Page user data
      */
@@ -1230,6 +1254,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         user.setCity(txtUpdateCity.getText());
         user.setPostCode(txtUpdatePostCode.getText());
     }
+    
     /**
      * This method retrieves bookings for a user and stores it in the observeableList
      * @return
@@ -1305,8 +1330,6 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         } else {
             exist = false;
         }
-        System.out.println("bookingExist" + preparedStatement);
-        System.out.println("bookingExist" + exist);
         return exist;
     }
     
@@ -1332,73 +1355,58 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
             duration = bookings.get(i).getDuration();
             time = bookings.get(i).getTime();
             
-//            boolean one = comboActivity.getSelectionModel().getSelectedItem().contains(bookings.get(i).getActivity());
-//            boolean two = bookingDate.getValue().toString().contains(bookings.get(i).getDate());
-//            boolean three = comboTime.getSelectionModel().getSelectedItem().contains(bookings.get(i).getPeriodofday());
-//            boolean four = comboDuration.getSelectionModel().getSelectedItem().contains(bookings.get(i).getDuration());
-//            boolean five = btn1.getText().contains(bookings.get(i).getTime());
-//            
-//            System.out.println("disable button Activity: " + bookings.get(i).getActivity());
-//            System.out.println("disable button Date: " + bookings.get(i).getDate());
-//            System.out.println("disable button Period: " + bookings.get(i).getPeriodofday());
-//            System.out.println("disable button Duration: " + bookings.get(i).getDuration());
-//            System.out.println("disable button Time: " + bookings.get(i).getTime());
-//            
-//            System.out.println("disable button same activity: " + one);
-//            System.out.println("disable button same date: " + two);
-//            System.out.println("disable button same period: " + three);
-//            System.out.println("disable button same duration: " + four);
-//            System.out.println("disable button same button: " + five);
-//            
-            
             if(bookingExists(activity, date, periodofday, duration, time)){
                 
                 if(true && comboActivity.getSelectionModel().getSelectedItem().contains(bookings.get(i).getActivity()) && bookingDate.getValue().toString().contains(bookings.get(i).getDate()) 
                         && comboTime.getSelectionModel().getSelectedItem().contains(bookings.get(i).getPeriodofday()) 
                         && comboDuration.getSelectionModel().getSelectedItem().contains(bookings.get(i).getDuration()) && btn1.getText().equals(time)){
                     btn1.setDisable(true);
+                    btn1.setText("Booked");
                 } else if(true && comboActivity.getSelectionModel().getSelectedItem().contains(bookings.get(i).getActivity()) && bookingDate.getValue().toString().contains(bookings.get(i).getDate()) 
                         && comboTime.getSelectionModel().getSelectedItem().contains(bookings.get(i).getPeriodofday()) 
                         && comboDuration.getSelectionModel().getSelectedItem().contains(bookings.get(i).getDuration()) && btn2.getText().equals(time)){
                     btn2.setDisable(true);
+                    btn2.setText("Booked");
                 } else if(true && comboActivity.getSelectionModel().getSelectedItem().contains(bookings.get(i).getActivity()) && bookingDate.getValue().toString().contains(bookings.get(i).getDate()) 
                         && comboTime.getSelectionModel().getSelectedItem().contains(bookings.get(i).getPeriodofday()) 
                         && comboDuration.getSelectionModel().getSelectedItem().contains(bookings.get(i).getDuration()) && btn3.getText().equals(time)){
                     btn3.setDisable(true);
+                    btn3.setText("Booked");
                 } else if(true && comboActivity.getSelectionModel().getSelectedItem().contains(bookings.get(i).getActivity()) && bookingDate.getValue().toString().contains(bookings.get(i).getDate()) 
                         && comboTime.getSelectionModel().getSelectedItem().contains(bookings.get(i).getPeriodofday()) 
                         && comboDuration.getSelectionModel().getSelectedItem().contains(bookings.get(i).getDuration()) && btn4.getText().equals(time)){
                     btn4.setDisable(true);
+                    btn4.setText("Booked");
                 } else if(true && comboActivity.getSelectionModel().getSelectedItem().contains(bookings.get(i).getActivity()) && bookingDate.getValue().toString().contains(bookings.get(i).getDate()) 
                         && comboTime.getSelectionModel().getSelectedItem().contains(bookings.get(i).getPeriodofday()) 
                         && comboDuration.getSelectionModel().getSelectedItem().contains(bookings.get(i).getDuration()) && btn5.getText().equals(time)){
                     btn5.setDisable(true);
+                    btn5.setText("Booked");
                 } else if(true && comboActivity.getSelectionModel().getSelectedItem().contains(bookings.get(i).getActivity()) && bookingDate.getValue().toString().contains(bookings.get(i).getDate()) 
                         && comboTime.getSelectionModel().getSelectedItem().contains(bookings.get(i).getPeriodofday()) 
                         && comboDuration.getSelectionModel().getSelectedItem().contains(bookings.get(i).getDuration()) && btn6.getText().equals(time)){
                     btn6.setDisable(true);
+                    btn6.setText("Booked");
                 } else if(true && comboActivity.getSelectionModel().getSelectedItem().contains(bookings.get(i).getActivity()) && bookingDate.getValue().toString().contains(bookings.get(i).getDate()) 
                         && comboTime.getSelectionModel().getSelectedItem().contains(bookings.get(i).getPeriodofday()) 
                         && comboDuration.getSelectionModel().getSelectedItem().contains(bookings.get(i).getDuration()) && btn7.getText().equals(time)){
                     btn7.setDisable(true);
+                    btn7.setText("Booked");
                 } else if(true && comboActivity.getSelectionModel().getSelectedItem().contains(bookings.get(i).getActivity()) && bookingDate.getValue().toString().contains(bookings.get(i).getDate()) 
                         && comboTime.getSelectionModel().getSelectedItem().contains(bookings.get(i).getPeriodofday()) 
                         && comboDuration.getSelectionModel().getSelectedItem().contains(bookings.get(i).getDuration()) && btn8.getText().equals(time)){
                     btn8.setDisable(true);
+                    btn8.setText("Booked");
                 } else if(true && comboActivity.getSelectionModel().getSelectedItem().contains(bookings.get(i).getActivity()) && bookingDate.getValue().toString().contains(bookings.get(i).getDate()) 
                         && comboTime.getSelectionModel().getSelectedItem().contains(bookings.get(i).getPeriodofday()) 
                         && comboDuration.getSelectionModel().getSelectedItem().contains(bookings.get(i).getDuration()) && btn9.getText().equals(time)){
                     btn9.setDisable(true);
+                    btn9.setText("Booked");
                 }
-                
-                
                 //end of bookingexist
             }
-            
-            
             //end of for loop
         }
-        
         //end of method
     }
     
