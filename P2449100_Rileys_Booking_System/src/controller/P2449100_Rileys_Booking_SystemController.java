@@ -293,7 +293,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     }
     
     /**
-     * If the user is a member of staff they will be redirected to the staff view page
+     * Redirect staff to the staff view page
      * @param event
      * @throws IOException 
      */
@@ -576,7 +576,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
             Statement statement = connectDB.createStatement();
             statement.execute(insertToRegister);
             alertBoxRegister();
-            goBackToLogin(event);
+            goToLogin(event);
         } catch (SQLException e) {
             
         }
@@ -1034,6 +1034,9 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         return exist;
     }
     
+    /**
+     * Alert Boxes
+     */
     public void alertBoxBookingComplete(){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("");
@@ -1229,7 +1232,6 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         
         Statement statement = connectDB.createStatement();
         ResultSet queryResult = statement.executeQuery(query);
-        //going to move this to top of class
         if(queryResult.next()){
         user.setCust_ID(queryResult.getInt(1));
         user.setTitle(queryResult.getString(2));
