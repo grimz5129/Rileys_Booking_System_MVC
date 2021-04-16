@@ -76,6 +76,7 @@
             <Font size="34.0" />
          </font>
       </Text>
-      <Button layoutX="320.0" layoutY="423.0" mnemonicParsing="false" onAction="#cancelBookingStaff" prefHeight="32.0" prefWidth="159.0" style="-fx-background-color: #353453; -fx-cursor: hand;" text="Cancel Booking" textFill="WHITE" />
+      <Button layoutX="230.0" layoutY="423.0" mnemonicParsing="false" onAction="#cancelBookingStaff" prefHeight="32.0" prefWidth="159.0" style="-fx-background-color: #353453; -fx-cursor: hand;" text="Cancel Booking" textFill="WHITE" />
+      <Button layoutX="410.0" layoutY="423.0" mnemonicParsing="false" onAction="#loadProfile" prefHeight="32.0" prefWidth="159.0" style="-fx-background-color: #353453; -fx-cursor: hand;" text="Edit Account" textFill="WHITE" />
    </children>
 </AnchorPane>
