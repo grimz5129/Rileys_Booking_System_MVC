@@ -8,7 +8,7 @@ package model;
 import javafx.beans.property.SimpleStringProperty;
 
 /**
- *
+ * The Booking model is used for displaying data in tableView
  * @author Yefri
  */
 public class Booking {

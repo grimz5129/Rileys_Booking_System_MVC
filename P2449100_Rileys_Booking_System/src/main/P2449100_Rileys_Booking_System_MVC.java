@@ -14,10 +14,10 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 /**
- *
+ * The Application Loader
+ * Launch page is the login page
  * @author Yefri
  * 
- * so basically the new reg page works so you need to transfer over and make new classes no copy and pasting no work
  */
 public class P2449100_Rileys_Booking_System_MVC extends Application {
     
