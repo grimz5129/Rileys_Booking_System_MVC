@@ -604,7 +604,8 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
      */
     @FXML
     private void goBack(ActionEvent event) throws IOException {
-        Parent home_page_parent = FXMLLoader.load(getClass().getResource("/view/homePage.fxml"));
+        if(user.getPrivilege() == 1){
+        Parent home_page_parent = FXMLLoader.load(getClass().getResource("/view/staffViewPage.fxml"));
         Scene home_page_scene = new Scene(home_page_parent);
         Stage app_stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         
@@ -621,6 +622,26 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         
         app_stage.setScene(home_page_scene);
         app_stage.show();
+        } else if(user.getPrivilege() == 0){
+          Parent home_page_parent = FXMLLoader.load(getClass().getResource("/view/homePage.fxml"));
+        Scene home_page_scene = new Scene(home_page_parent);
+        Stage app_stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        
+        Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        
+        home_page_parent.setOnMousePressed((MouseEvent event1) -> {
+            xOffset = stage.getX() - event1.getScreenX();
+            yOffset = stage.getY() - event1.getScreenY();
+        });
+        home_page_parent.setOnMouseDragged((MouseEvent event1) -> {
+            stage.setX(event1.getScreenX() + xOffset);
+            stage.setY(event1.getScreenY() + yOffset);
+        });
+        
+        app_stage.setScene(home_page_scene);
+        app_stage.show();  
+        }
+        
     }
     
     //this is Booking Page Controller
