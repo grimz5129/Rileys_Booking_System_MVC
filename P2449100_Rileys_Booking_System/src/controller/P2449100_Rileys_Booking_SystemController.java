@@ -18,6 +18,7 @@ import java.sql.Statement;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -1286,7 +1287,8 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     public ObservableList<Booking> getBookings() throws SQLException{
         DatabaseConnection connectNow = new DatabaseConnection();
         Connection connectDB = connectNow.getConnection();
-        String query = "SELECT * FROM booking WHERE cust_id = '" + user.getCust_ID() + "'";
+        LocalDate current = LocalDate.now();
+        String query = "SELECT * FROM booking WHERE date >= '" + current + "' AND cust_id = '" + user.getCust_ID() + "'";
         
         Statement statement = connectDB.createStatement();
         ResultSet queryResult = statement.executeQuery(query);
@@ -1308,14 +1310,15 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     public ObservableList<Booking> getAllBookings() throws SQLException{
         DatabaseConnection connectNow = new DatabaseConnection();
         Connection connectDB = connectNow.getConnection();
-        String query = "SELECT * FROM booking";
+        LocalDate current = LocalDate.now();
+        String query = "SELECT * FROM booking WHERE date >= '" + current + "'";
         
         Statement statement = connectDB.createStatement();
         ResultSet queryResult = statement.executeQuery(query);
         
         ObservableList<Booking> bookings = FXCollections.observableArrayList();
         
-        while (queryResult.next()){
+        while(queryResult.next()){
                 bookings.add(new Booking(queryResult.getString("activity"), queryResult.getString("periodofday"), 
                         queryResult.getString("duration"), queryResult.getString("time"), queryResult.getString("date"), queryResult.getString("cust_id")));
             } 
