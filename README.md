@@ -2,7 +2,7 @@
 My final year project using the MVC architecture
 
 ## Environment:
-* Netbeans 12.0 IDE
+* Netbeans IDE 12.0
 * Phpmyadmin (MariaDB)
 * JDK 8
 * Gluon Scene Builder
