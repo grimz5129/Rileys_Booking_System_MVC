@@ -156,7 +156,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
     @FXML
     private TableColumn<Booking, String> staffDurationColumn = new TableColumn<>();
     @FXML
-    private TableColumn<Booking, String> staffCustColumn = new TableColumn<>();
+    private TableColumn<Booking, String> staffNameColumn = new TableColumn<>();
     
     String bookingTime;
     private double xOffset = 0;
@@ -204,7 +204,9 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         staffDurationColumn.setCellValueFactory(new PropertyValueFactory<>("duration"));
         staffTimeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
         staffDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
-        staffCustColumn.setCellValueFactory(new PropertyValueFactory<>("cust_id"));
+        staffNameColumn.setCellValueFactory(new PropertyValueFactory<>("cust_id"));
+        
+        disableEditTableView();
         
         try {
             bookingTableView.setItems(getBookings());
@@ -668,8 +670,10 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
             duration = 60;
         }
         
-        String insertFields = "INSERT INTO booking(activity, date, periodofday, duration, time, cust_id) VALUES ('";
-        String insertValues = activity+"','"+date+"','"+periodofday+"','"+duration+"','"+time+"','"+cust_id+"')";
+        String name = user.getFirstname()+" "+user.getLastname();
+        
+        String insertFields = "INSERT INTO booking(activity, date, periodofday, duration, time, cust_id, name) VALUES ('";
+        String insertValues = activity+"','"+date+"','"+periodofday+"','"+duration+"','"+time+"','"+cust_id+"','"+name+"')";
         String insertToBooking = insertFields+insertValues;
         
         if(!bookingTime.isEmpty()){
@@ -865,10 +869,10 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         String duration = staffDurationColumn.getCellData(selectedIndex);
         String time = staffTimeColumn.getCellData(selectedIndex);
         String date = staffDateColumn.getCellData(selectedIndex);
-        String cust_id = staffCustColumn.getCellData(selectedIndex);
+        String name = staffNameColumn.getCellData(selectedIndex);
         
         if(selectedIndex >= 0){
-            String query = "DELETE FROM booking WHERE activity = ? AND periodofday = ? AND duration = ? AND time = ? AND date = ? AND cust_id = ?";
+            String query = "DELETE FROM booking WHERE activity = ? AND periodofday = ? AND duration = ? AND time = ? AND date = ? AND name = ?";
             
             PreparedStatement pst = connectDB.prepareStatement(query);
             pst.setString(1, activity);
@@ -876,7 +880,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
             pst.setString(3, duration);
             pst.setString(4, time);
             pst.setString(5, date);
-            pst.setInt(6, Integer.parseInt(cust_id));
+            pst.setString(6, name);
             pst.execute();
             staffTableView.getItems().remove(selectedIndex);
             
@@ -1131,7 +1135,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         alert.setTitle("");
         alert.setHeaderText("Login Successful");
         alert.setContentText("Email and Password Match");
-
+        
         alert.showAndWait();
     }
     
@@ -1320,7 +1324,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         
         while(queryResult.next()){
                 bookings.add(new Booking(queryResult.getString("activity"), queryResult.getString("periodofday"), 
-                        queryResult.getString("duration"), queryResult.getString("time"), queryResult.getString("date"), queryResult.getString("cust_id")));
+                        queryResult.getString("duration"), queryResult.getString("time"), queryResult.getString("date"), queryResult.getString("name")));
             } 
         return bookings;
         }
@@ -1451,7 +1455,20 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         btn9.setDisable(false);
     }
     
+    public void disableEditTableView(){
+        activityColumn.setResizable(false);
+        periodofdayColumn.setResizable(false);
+        durationColumn.setResizable(false);
+        timeColumn.setResizable(false);
+        dateColumn.setResizable(false);
         
+        staffActivityColumn.setResizable(false);
+        staffPeriodofdayColumn.setResizable(false);
+        staffDateColumn.setResizable(false);
+        staffTimeColumn.setResizable(false);
+        staffDurationColumn.setResizable(false);
+        staffNameColumn.setResizable(false);
+    } 
         
         
 }
