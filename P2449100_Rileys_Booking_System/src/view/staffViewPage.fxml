@@ -22,14 +22,14 @@
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="291.0" prefWidth="760.0">
                            <children>
-                              <TableView fx:id="staffTableView" prefHeight="294.0" prefWidth="764.0">
+                              <TableView fx:id="staffTableView" prefHeight="294.0" prefWidth="762.0">
                                  <columns>
-                                    <TableColumn fx:id="staffActivityColumn" editable="false" prefWidth="144.0" sortable="false" text="Activity" />
-                                    <TableColumn fx:id="staffPeriodofdayColumn" editable="false" prefWidth="172.0" sortable="false" text="PeriodOfDay" />
-                                    <TableColumn fx:id="staffDurationColumn" editable="false" prefWidth="134.0" sortable="false" text="Duration" />
-                                    <TableColumn fx:id="staffTimeColumn" editable="false" prefWidth="152.0" sortable="false" text="Time" />
-                                    <TableColumn fx:id="staffDateColumn" editable="false" prefWidth="165.0" sortable="false" text="Date" />
-                                    <TableColumn fx:id="staffCustColumn" prefWidth="59.0" text="Cust_ID" />
+                                    <TableColumn fx:id="staffNameColumn" editable="false" prefWidth="130.0" sortable="false" text="Name" />
+                                    <TableColumn fx:id="staffActivityColumn" editable="false" prefWidth="143.0" sortable="false" text="Activity" />
+                                    <TableColumn fx:id="staffPeriodofdayColumn" editable="false" prefWidth="155.0" sortable="false" text="PeriodOfDay" />
+                                    <TableColumn fx:id="staffDurationColumn" editable="false" prefWidth="90.0" sortable="false" text="Duration" />
+                                    <TableColumn fx:id="staffDateColumn" editable="false" minWidth="0.0" prefWidth="131.0" sortable="false" text="Date" />
+                                    <TableColumn fx:id="staffTimeColumn" editable="false" prefWidth="108.0" sortable="false" text="Time" />
                                  </columns>
                               </TableView>
                            </children></AnchorPane>

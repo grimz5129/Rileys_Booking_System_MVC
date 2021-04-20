@@ -12,7 +12,7 @@ import javafx.beans.property.SimpleStringProperty;
  * @author Yefri
  */
 public class Booking {
-     private SimpleStringProperty activity, periodofday, duration, time, date, cust_id;
+     private SimpleStringProperty activity, periodofday, duration, time, date, cust_id, name;
 
     public Booking(String activity, String periodofday, String duration, String time, String date) {
         this.activity = new SimpleStringProperty(activity);
@@ -31,10 +31,14 @@ public class Booking {
         this.cust_id = new SimpleStringProperty(cust_id);
     }
     
-    public Booking(String periodofday, String time, String date){
+    public Booking(String activity, String periodofday, String duration, String time, String date, String cust_id, String name){
+        this.activity = new SimpleStringProperty(activity);
         this.periodofday = new SimpleStringProperty(periodofday);
+        this.duration = new SimpleStringProperty(duration);
         this.time = new SimpleStringProperty(time);
         this.date = new SimpleStringProperty(date);
+        this.cust_id = new SimpleStringProperty(cust_id);
+        this.name = new SimpleStringProperty(name);
     }    
 
     public String getActivity() {
@@ -84,6 +88,16 @@ public class Booking {
     public void setCust_id(SimpleStringProperty cust_id) {
         this.cust_id = cust_id;
     }    
+
+    public String getName() {
+        return name.get();
+    }
+
+    public void setName(SimpleStringProperty name) {
+        this.name = name;
+    }
+    
+    
     
     
 }
