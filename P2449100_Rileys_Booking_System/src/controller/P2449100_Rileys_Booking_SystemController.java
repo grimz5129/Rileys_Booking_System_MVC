@@ -1315,7 +1315,7 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         DatabaseConnection connectNow = new DatabaseConnection();
         Connection connectDB = connectNow.getConnection();
         LocalDate current = LocalDate.now();
-        String query = "SELECT * FROM booking WHERE date >= '" + current + "'";
+        String query = "SELECT * FROM booking WHERE date = '" + current + "'";
         
         Statement statement = connectDB.createStatement();
         ResultSet queryResult = statement.executeQuery(query);
