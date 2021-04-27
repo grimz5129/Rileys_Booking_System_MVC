@@ -17,10 +17,14 @@ public class DatabaseConnection {
     
     public Connection getConnection(){
 //        String databaseName = "rileysdb3";
-        String databaseName = "rileysdb";
-        String databaseUser = "root";
-        String databasePassword = "";
-        String url = "jdbc:mysql://localhost/" + databaseName;
+//        String databaseName = "rileysdb";
+        String databaseName = "sql4407938";
+//        String databaseUser = "root";
+        String databaseUser = "sql4407938";
+//        String databasePassword = "";
+        String databasePassword = "ujfQRKHxQE";
+//        String url = "jdbc:mysql://localhost/" + databaseName;
+        String url = "jdbc:mysql://sql4.freesqldatabase.com:3306/" + databaseName;
         
         try {
             Class.forName("com.mysql.jdbc.Driver");
