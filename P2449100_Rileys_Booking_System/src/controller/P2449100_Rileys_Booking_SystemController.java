@@ -948,7 +948,11 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
      */
     @FXML
     private void Cancel(ActionEvent event) throws IOException {
-        homepage(event);
+        if(user.getPrivilege() == 1){
+            loadStaffPage(event);
+        } else if (user.getPrivilege() == 0){
+            homepage(event);
+        }
     }
     
     /**
