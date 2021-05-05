@@ -18,7 +18,6 @@ import java.sql.Statement;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -777,7 +776,15 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         String time = timeColumn.getCellData(selectedIndex);
         String date = dateColumn.getCellData(selectedIndex);
         
-        if(selectedIndex >= 0){
+        Alert.AlertType type = Alert.AlertType.CONFIRMATION;
+        Alert alert = new Alert(type, "");
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.getDialogPane().setContentText("Do you want to cancel this booking");
+        alert.getDialogPane().setHeaderText("Cancel Booking");
+        
+        Optional<ButtonType> result = alert.showAndWait();
+        if(result.get() == ButtonType.OK) {
+            if(selectedIndex >= 0){
             String query = "DELETE FROM booking WHERE activity = ? AND periodofday = ? AND duration = ? AND time = ? AND date = ? AND cust_id = ?";
             
             PreparedStatement pst = connectDB.prepareStatement(query);
@@ -791,12 +798,12 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
             bookingTableView.getItems().remove(selectedIndex);
             
         } else {
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("ERROR:");
-            alert.setHeaderText("No selection was made.");
-            alert.setContentText("You have not selected an item to delete. Please try again.");
-            alert.showAndWait();
+            alertBoxCancelBookingError();
         }
+        } else if (result.get() == ButtonType.CANCEL){
+            //do nothing
+        }
+        
             
     }
     
@@ -871,7 +878,15 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         String date = staffDateColumn.getCellData(selectedIndex);
         String name = staffNameColumn.getCellData(selectedIndex);
         
-        if(selectedIndex >= 0){
+        Alert.AlertType type = Alert.AlertType.CONFIRMATION;
+        Alert alert = new Alert(type, "");
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.getDialogPane().setContentText("Do you want to cancel this booking");
+        alert.getDialogPane().setHeaderText("Cancel Booking");
+        
+        Optional<ButtonType> result = alert.showAndWait();
+        if(result.get() == ButtonType.OK) {
+            if(selectedIndex >= 0){
             String query = "DELETE FROM booking WHERE activity = ? AND periodofday = ? AND duration = ? AND time = ? AND date = ? AND name = ?";
             
             PreparedStatement pst = connectDB.prepareStatement(query);
@@ -885,12 +900,12 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
             staffTableView.getItems().remove(selectedIndex);
             
         } else {
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("ERROR:");
-            alert.setHeaderText("No selection was made.");
-            alert.setContentText("You have not selected an item to delete. Please try again.");
-            alert.showAndWait();
+            alertBoxCancelBookingError();
         }
+        } else if (result.get() == ButtonType.CANCEL){
+            //do nothing
+        }
+        
     }
     
     //update password page
@@ -1149,6 +1164,14 @@ public class P2449100_Rileys_Booking_SystemController implements Initializable {
         alert.setHeaderText("Registration Form");
         alert.setContentText("1. Make sure all information is valid \n2. The password must be 8 characters or more \n3. You must be 18 or older");
         alert.showAndWait();
+    }
+    
+    public void alertBoxCancelBookingError(){
+        Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("ERROR:");
+            alert.setHeaderText("No selection was made.");
+            alert.setContentText("You have not selected an item to delete. Please try again.");
+            alert.showAndWait();
     }
     
     /**
