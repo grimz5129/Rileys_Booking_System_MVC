@@ -6,6 +6,7 @@ My final year project using the MVC architecture
 * Phpmyadmin (MariaDB)
 * JDK 8
 * Gluon Scene Builder
+* JavaFX
 
 ## Features
 * Login System
